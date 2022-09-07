@@ -46,7 +46,7 @@ import minitz from "minitz";
 JavaScript
 
 ```javascript
-import minitz from "https://cdn.jsdelivr.net/gh/hexagon/minitz@1/src/minitz.js";
+import minitz from "https://cdn.jsdelivr.net/gh/hexagon/minitz/src/minitz.js";
 
 // ...
 ```
@@ -54,7 +54,7 @@ import minitz from "https://cdn.jsdelivr.net/gh/hexagon/minitz@1/src/minitz.js";
 TypeScript
 
 ```typescript
-import { minitz } from "https://cdn.jsdelivr.net/gh/hexagon/minitz@1/src/minitz.js";
+import { minitz } from "https://cdn.jsdelivr.net/gh/hexagon/minitz/src/minitz.js";
 
 // ...
 ```
@@ -72,14 +72,14 @@ import { minitz } from "https://cdn.jsdelivr.net/gh/hexagon/minitz@1/src/minitz.
 To use as a [UMD](https://github.com/umdjs/umd)-module (stand alone, [RequireJS](https://requirejs.org/) etc.)
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/minitz@1/dist/minitz.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/minitz/dist/minitz.min.js"></script>
 ```
 
 To use as a [ES-module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 
 ```html
 <script type="module">
-	import minitz from "https://cdn.jsdelivr.net/npm/minitz@1/dist/minitz.min.mjs";
+	import minitz from "https://cdn.jsdelivr.net/npm/minitz/dist/minitz.min.mjs";
 
 	// ... see usage section ...
 </script>
@@ -92,8 +92,37 @@ Full documentation available at [hexagon.github.io/minitz](https://hexagon.githu
 
 Assuming you have imported minitz as described under 'Installation'.
 
+Convert local time to a specific timezone
+
 ```javascript
-// ToDo
+		
+const 
+    localTime = new Date(),
+    timeInSantiago = minitz.toTZ(localTime, "America/Santiago");
+
+console.log("Local time: ", localTime.toLocaleString('sv-SE'));
+// Local time:  2022-09-08 00:08:09
+
+console.log("Time in Santiago: ", timeInSantiago.toLocaleString('sv-SE'));
+// Time in santiago: 2022-09-07 19:08:09
+
+
+```
+
+Convert from a specific timezone to local time
+
+```javascript
+
+const 
+    timeInSantiago = new Date(Date.parse("2022-09-07 19:08:09")),
+    localTime = minitz.fromTZ(timeInSantiago, "America/Santiago");
+
+console.log("Time in Santiago: ", timeInSantiago.toLocaleString('sv-SE'));
+// Time in santiago: 2022-09-07 19:08:09
+
+console.log("Local time: ", localTime.toLocaleString('sv-SE'));
+// Local time:  2022-09-08 00:08:09
+
 ```
 
 ## Contributing
