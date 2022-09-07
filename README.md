@@ -9,8 +9,8 @@ Converting Date objects between different timezones in javascript is hard. This 
 *   Convert Dates between timezones.
 *   MIT licensed, use the library any way you want. For real.
 *   Minimal, no dependencies. Relies on JavaScript Intl and current best practises.
-*   Works in Node.js >=4.0 (both require and import).
-*   Works in Deno >=1.16.
+*   Works in Node.js >=14.0 (both require and import).
+*   Works in Deno >=1.8.
 *   Works in browsers as standalone, UMD or ES-module.
 *   Includes [TypeScript](https://www.typescriptlang.org/) typings.
 *   **Important:** Currently in pre-release. Check back for version 1.0 later.
