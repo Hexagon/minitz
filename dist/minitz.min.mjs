@@ -1,0 +1,1 @@
+let minitz={};minitz.minitz=minitz;export{minitz as default,minitz};
