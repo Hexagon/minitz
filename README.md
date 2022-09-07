@@ -1,16 +1,19 @@
 # minitz
 
-Description ToDo
+Converting Date objects between different timezones in javascript is hard. This minimal library tries to solve that problem in the simplest possible way. You can convert dates to a specific timezone, and you can also convert dates **from** specific timezones.
 
 [![Node.js CI](https://github.com/Hexagon/minitz/actions/workflows/node.js.yml/badge.svg)](https://github.com/Hexagon/minitz/actions/workflows/node.js.yml) [![Deno CI](https://github.com/Hexagon/minitz/actions/workflows/deno.yml/badge.svg)](https://github.com/Hexagon/minitz/actions/workflows/deno.yml) 
 [![npm version](https://badge.fury.io/js/@hexagon%2Fminitz.svg)](https://badge.fury.io/js/@hexagon%2Fminitz) [![NPM Downloads](https://img.shields.io/npm/dm/minitz.svg)](https://www.npmjs.org/package/minitz) [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/minitz/badge?style=rounded)](https://www.jsdelivr.com/package/npm/minitz) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/4978bdbf495941c087ecb32b120f28ff)](https://www.codacy.com/gh/Hexagon/minitz/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Hexagon/minitz&amp;utm_campaign=Badge_Grade)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Hexagon/minitz/blob/main/LICENSE) 
 
-*   Features
+*   Convert Dates between timezones.
+*   MIT licensed, use the library any way you want. For real.
+*   Minimal, no dependencies. Relies on JavaScript Intl and current best practises.
 *   Works in Node.js >=4.0 (both require and import).
 *   Works in Deno >=1.16.
 *   Works in browsers as standalone, UMD or ES-module.
 *   Includes [TypeScript](https://www.typescriptlang.org/) typings.
+*   **Important:** Currently in pre-release. Check back for version 1.0 later.
 
 ## Installation
 
