@@ -1,7 +1,7 @@
 {
   "name": "minitz",
   "version": "0.0.1",
-  "description": "minitz and minitzurl to string or arraybuffer, and back. Node, Deno or browser.",
+  "description": "Minimal utility to convert Date between timezones in JavaScript/TypeScript. Deno/Node/Browser. ESM/ComonJS.",
   "author": "Hexagon <github.com/hexagon>",
   "homepage": "https://hexagon.github.io/minitz",
   "repository": {
