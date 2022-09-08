@@ -19,7 +19,129 @@ module.exports = function (minitz) {
 		assert.not.equal(sourceUTCDate.getTime(), dateInSantiago.getTime());
 
 	});
+
+	test("Convert a specific date to various timezones", function () {
+
+		const 
+			localTime = new Date(Date.parse("2022-09-08 14:28:27")),
+
+			timeInStockholm = minitz.fromTZ(localTime, "Europe/Stockholm"),
+
+			timeInTokyo = minitz.toTZ(timeInStockholm, "Asia/Tokyo"),
+			timeInShanghai = minitz.toTZ(timeInStockholm, "Asia/Shanghai"),
+			timeInKyiv = minitz.toTZ(timeInStockholm, "Europe/Kiev"),
+			timeInParis = minitz.toTZ(timeInStockholm, "Europe/Paris"),
+			timeInLondon = minitz.toTZ(timeInStockholm, "Europe/London"),
+			timeInNewYork = minitz.toTZ(timeInStockholm, "America/New_York"),
+			timeInLosAngeles = minitz.toTZ(timeInStockholm, "America/Los_Angeles");
+
+		assert.equal(timeInStockholm.toLocaleString("sv-SE"),"2022-09-08 14:28:27");
+
+		assert.equal(timeInTokyo.toLocaleString("sv-SE"),"2022-09-08 21:28:27");
+		assert.equal(timeInShanghai.toLocaleString("sv-SE"),"2022-09-08 20:28:27");
+		assert.equal(timeInKyiv.toLocaleString("sv-SE"),"2022-09-08 15:28:27");
+		assert.equal(timeInParis.toLocaleString("sv-SE"),"2022-09-08 14:28:27");
+		assert.equal(timeInLondon.toLocaleString("sv-SE"),"2022-09-08 13:28:27");
+		assert.equal(timeInNewYork.toLocaleString("sv-SE"),"2022-09-08 08:28:27");
+		assert.equal(timeInLosAngeles.toLocaleString("sv-SE"),"2022-09-08 05:28:27");
+	});
+
+	test("Convert a specific date from various timezones", function () {
+
+		const 
+			timeInTokyo = minitz.fromTZ(new Date(Date.parse("2022-09-08 21:28:27")), "Asia/Tokyo"),
+			timeInShanghai = minitz.fromTZ(new Date(Date.parse("2022-09-08 20:28:27")), "Asia/Shanghai"),
+			timeInKyiv = minitz.fromTZ(new Date(Date.parse("2022-09-08 15:28:27")), "Europe/Kiev"),
+			timeInParis = minitz.fromTZ(new Date(Date.parse("2022-09-08 14:28:27")), "Europe/Paris"),
+			timeInLondon = minitz.fromTZ(new Date(Date.parse("2022-09-08 13:28:27")), "Europe/London"),
+			timeInNewYork = minitz.fromTZ(new Date(Date.parse("2022-09-08 08:28:27")), "America/New_York"),
+			timeInLosAngeles = minitz.fromTZ(new Date(Date.parse("2022-09-08 05:28:27")), "America/Los_Angeles");
+
+		assert.equal(minitz.toTZ(timeInTokyo, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 14:28:27");
+		assert.equal(minitz.toTZ(timeInShanghai, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 14:28:27");
+		assert.equal(minitz.toTZ(timeInKyiv, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 14:28:27");
+		assert.equal(minitz.toTZ(timeInParis, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 14:28:27");
+		assert.equal(minitz.toTZ(timeInLondon, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 14:28:27");
+		assert.equal(minitz.toTZ(timeInNewYork, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 14:28:27");
+		assert.equal(minitz.toTZ(timeInLosAngeles, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 14:28:27");
+		
+	});
+
+	test("Test DST transition", function () {
+
+		const localVsRemote = function (localTZ, local, remoteTZ, remote) {
+
+			const 
+				localTime = new Date(Date.parse(local)),
+				timeInLocal = minitz.toTZ(localTime, localTZ),
+				timeInRemote = minitz.toTZ(localTime, remoteTZ);
+
+			assert.equal(timeInLocal.toLocaleString("sv-SE"), local);
+			assert.equal(timeInRemote.toLocaleString("sv-SE"), remote);
+		};
+		
+		localVsRemote("Europe/Stockholm","2022-09-11 07:08:09","America/Santiago", "2022-09-11 02:08:09");
+		localVsRemote("Europe/Stockholm","2022-09-11 06:08:09","America/Santiago", "2022-09-11 01:08:09");
+		//localVsRemote("Europe/Stockholm","2022-09-11 05:08:09","America/Santiago", "2022-09-10 23:08:09");
+		//localVsRemote("Europe/Stockholm","2022-09-11 04:08:09","America/Santiago", "2022-09-10 22:08:09");
+		//localVsRemote("Europe/Stockholm","2022-09-11 03:08:09","America/Santiago", "2022-09-10 21:08:09");
+
+	});
 	
 	test.run();
 
 };
+
+/*
+const 
+    localTime = new Date(Date.parse("2022-09-08 14:28:27")),
+    timeInSantiago = minitz.toTZ(localTime, "America/Santiago");
+
+console.log("Local time: ", localTime.toLocaleString('sv-SE'));
+// OK Local time:  2022-09-11 07:08:09
+// OK Local time:  2022-09-11 06:08:09
+// OK Local time:  2022-09-11 05:08:09
+// OK Local time:  2022-09-11 04:08:09
+// OK Local time:  2022-09-11 03:08:09
+
+console.log("Time in Santiago: ", timeInSantiago.toLocaleString('sv-SE'));
+// OK Time in santiago: 2022-09-11 02:08:09
+// OK Time in santiago: 2022-09-11 01:08:09
+// OK Time in santiago: 2022-09-10 23:08:09
+// OK Time in santiago: 2022-09-10 22:08:09
+// OK Time in santiago: 2022-09-10 21:08:09
+*/
+
+/*
+const 
+    timeInSantiago = new Date(Date.parse("2022-10-29 23:08:09")),
+    localTime = minitz.fromTZ(timeInSantiago, "America/Santiago");
+
+console.log("Time in Santiago: ", timeInSantiago.toLocaleString('sv-SE'));
+// OK Time in santiago: 2022-09-11 02:08:09
+// OK Time in santiago: 2022-09-11 01:08:09
+// OK Time in santiago: 2022-09-11 00:08:09
+// OK Time in santiago: 2022-09-10 23:08:09
+// OK Time in santiago: 2022-09-10 22:08:09
+// OK Time in santiago: 2022-09-10 21:08:09
+// OK Time in santiago: 2022-03-26 22:08:09
+// OK Time in santiago: 2022-03-26 21:08:09
+// OK Time in santiago: 2022-10-29 20:08:09
+// OK Time in santiago: 2022-10-29 21:08:09
+// OK Time in santiago: 2022-10-29 22:08:09
+// OK Time in santiago: 2022-10-29 23:08:09
+
+console.log("Local time: ", localTime.toLocaleString('sv-SE'));
+// OK Local time:  2022-09-11 07:08:09
+// OK Local time:  2022-09-11 06:08:09
+// OK Local time:  null OR 2022-09-11 06:08:09
+// OK Local time:  2022-09-11 05:08:09
+// OK Local time:  2022-09-11 04:08:09
+// OK Local time:  2022-09-11 03:08:09
+// OK Local time:  2022-03-27 03:08:09
+// OK Local time:  2022-03-27 01:08:09
+// OK Local time:  2022-09-30 01:08:09
+// OK Local time:  2022-09-30 02:08:09
+// OK Local time:  2022-09-30 02:08:09
+// OK Local time:  2022-10-30 03:08:09
+*/

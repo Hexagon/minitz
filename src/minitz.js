@@ -28,11 +28,34 @@
 
 let minitz = {};
 
+
+/**
+ * Check if current environment supports a timezone
+ * 
+ * @private
+ * 
+ * @param {string} tzString - Timezone string in Europe/Stockholm format
+ * @returns {boolean}
+ */
+const checkTimezone = function (tzString) {
+	
+	// Assume the time zone is valid and supported if Intl.supportedValuesOf is unavailable
+	if (!Intl.supportedValuesOf) {
+		return true;
+	}
+	
+	// Check for valid timezone, remove leading/trailing whitespace from input, and always compare in lowercase
+	return Intl.supportedValuesOf("timeZone").some(x => x.toLowerCase() == tzString.trim().toLowerCase());
+
+};
+
 /**
  * "Converts" a date to a specific time zone
  * 
- * Note: This is only for specific and controlled usage, 
- * as the internal UTC time of the resulting object will be off.
+ * **Note:** The resulting Date object will have local time set to target timezone, 
+ * but any functions/formatting working with UTC time, or offset will be misleading.
+ * 
+ * Only use this function to get a formatted local time string.
  * 
  * Example:
  *   let normalDate = new Date(); // d is a normal Date instance, with local timezone and correct utc representation
@@ -40,50 +63,72 @@ let minitz = {};
  *                                                 (for example) will return local time in new york, but getUTCHours()
  *                                                 will return something irrelevant.
  * 
+ * @public
+ * 
  * @param {date} date - Input date
  * @param {string} tzString - Timezone string in Europe/Stockholm format
- * @returns {date}
+ * @returns {date} - Date object with local time adjusted to target timezone. UTC time WILL be off.
  */
 minitz.toTZ = function (date, tzString) {
+
+	// Check timezone
+	if (!checkTimezone(tzString)) throw new Error("Invalid timezone passed to toTZ(): " + tzString);
+
 	return new Date(date.toLocaleString("sv-SE", {timeZone: tzString}));
+
 };
 
 /**
  * Reverse of toTZ
  * 
- * @param {date} date - Input (tainted) date, where local time is time in target timezone
+ * @public
+ * 
+ * @param {date} date - Tainted input date, where local time is time in target timezone
  * @param {string} tzString - Timezone string in Europe/Stockholm format
- * @returns {date} - Correct date object
+ * @param {boolean} [correctInvalidTime] - Return adjusted time if input time is during an DST switch. 
+ *                                        E.g. assume 01:01:01 if input is 00:01:01 but time actually 
+ *                                        skips from 23:59:59 to 01:00:00
+ * @returns {null|date} - Normal date object with correct UTC and Local time
  */
-minitz.fromTZ = function(sourceDate, tzString) {
+minitz.fromTZ = function(inputDate, tzString, correctInvalidTime) {
 
-	// Try using target offset
+	// Check timezone
+	if (!checkTimezone(tzString)) throw new Error("Invalid timezone passed to toTZ(): " + tzString);
+	
+	// Get initial offset between timezones starting from input time.
+	// Then create a guessed local time by subtracting offset from input time
+	// and try recreating input time using guessed local time and calculated offset.
 	const 
-		targetPlus = new Date(sourceDate.toLocaleString("sv-SE", {timeZone: tzString})),
-		offset = sourceDate.getTime() - targetPlus.getTime();
-
-	let testOffset = 0,
-		iterations = 0,
-		closestAfter = -Infinity;
-
-	while (iterations++ < 2) {
+		inputDateWithOffset = new Date(inputDate.toLocaleString("sv-SE", {timeZone: tzString})),
+		offset = inputDate.getTime() - inputDateWithOffset.getTime(),
+		guessedLocalDate = new Date(inputDate.getTime() + offset),
+		guessedInputDate = new Date(guessedLocalDate.toLocaleString("sv-SE", {timeZone: tzString}));
+	
+	// Check if recreated input time matches actual input time
+	const 
+		guessedInputDateOffset = guessedInputDate.getTime() - inputDate.getTime();
+	if (guessedInputDateOffset === 0) {
+		// All good, return local time
+		return guessedLocalDate;
+	} else {
+		// Not quite there yet, make a second try on guessing local time, adjust by the offset from previous guess
+		// Try recreating input time again
+		// Then calculate and check offset again
 		const 
-			testTarget = new Date(sourceDate.getTime() + offset - testOffset),
-			test = new Date(testTarget.toLocaleString("sv-SE", {timeZone: tzString}));
-
-		testOffset = test.getTime() - sourceDate.getTime();
-
-		if (testOffset === 0) {
-			return testTarget;
+			guessedLocalDate2 = new Date(inputDate.getTime() + offset - guessedInputDateOffset),
+			guessedInputDate2 = new Date(guessedLocalDate2.toLocaleString("sv-SE", {timeZone: tzString})),
+			guessedInputDateOffset2 = guessedInputDate2.getTime() - inputDate.getTime();
+		if (guessedInputDateOffset2 === 0) {
+			// All good, return local time
+			return guessedLocalDate2;
+		} else if (correctInvalidTime) {
+			// Input time is invalid, it is probably a point in time skipped by a DST switch, return the local time adjusted by initial offset
+			return guessedLocalDate;
 		} else {
-			if (testOffset < 0 && testOffset > closestAfter) {
-				closestAfter = testOffset;
-			}
+			// Input time is invalid, and the library is instructed to throw, so let's do it
+			throw new Error("Invalid date passed to fromTZ()");
 		}
-
 	}
-
-	return new Date(sourceDate.getTime() + offset - closestAfter);
 
 };
 
