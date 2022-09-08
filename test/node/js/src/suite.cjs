@@ -27,13 +27,13 @@ module.exports = function (minitz) {
 
 			timeInStockholm = minitz.fromTZ(localTime, "Europe/Stockholm"),
 
-			timeInTokyo = minitz.toTZ(timeInStockholm, "Asia/Tokyo"),
-			timeInShanghai = minitz.toTZ(timeInStockholm, "Asia/Shanghai"),
-			timeInKyiv = minitz.toTZ(timeInStockholm, "Europe/Kiev"),
-			timeInParis = minitz.toTZ(timeInStockholm, "Europe/Paris"),
-			timeInLondon = minitz.toTZ(timeInStockholm, "Europe/London"),
-			timeInNewYork = minitz.toTZ(timeInStockholm, "America/New_York"),
-			timeInLosAngeles = minitz.toTZ(timeInStockholm, "America/Los_Angeles");
+			timeInTokyo = minitz.toTZ(localTime, "Asia/Tokyo"),
+			timeInShanghai = minitz.toTZ(localTime, "Asia/Shanghai"),
+			timeInKyiv = minitz.toTZ(localTime, "Europe/Kiev"),
+			timeInParis = minitz.toTZ(localTime, "Europe/Paris"),
+			timeInLondon = minitz.toTZ(localTime, "Europe/London"),
+			timeInNewYork = minitz.toTZ(localTime, "America/New_York"),
+			timeInLosAngeles = minitz.toTZ(localTime, "America/Los_Angeles");
 
 		assert.equal(minitz.toTZ(timeInStockholm, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 14:28:27");
 
