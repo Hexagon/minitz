@@ -37,13 +37,13 @@ module.exports = function (minitz) {
 
 		assert.equal(timeInStockholm.toLocaleString("sv-SE"),"2022-09-08 14:28:27");
 
-		assert.equal(timeInTokyo.toLocaleString("sv-SE"),"2022-09-08 21:28:27");
-		assert.equal(timeInShanghai.toLocaleString("sv-SE"),"2022-09-08 20:28:27");
-		assert.equal(timeInKyiv.toLocaleString("sv-SE"),"2022-09-08 15:28:27");
-		assert.equal(timeInParis.toLocaleString("sv-SE"),"2022-09-08 14:28:27");
-		assert.equal(timeInLondon.toLocaleString("sv-SE"),"2022-09-08 13:28:27");
-		assert.equal(timeInNewYork.toLocaleString("sv-SE"),"2022-09-08 08:28:27");
-		assert.equal(timeInLosAngeles.toLocaleString("sv-SE"),"2022-09-08 05:28:27");
+		assert.equal(minitz.toTZ(timeInTokyo, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 21:28:27");
+		assert.equal(minitz.toTZ(timeInShanghai, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 20:28:27");
+		assert.equal(minitz.toTZ(timeInKyiv, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 15:28:27");
+		assert.equal(minitz.toTZ(timeInParis, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 14:28:27");
+		assert.equal(minitz.toTZ(timeInLondon, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 13:28:27");
+		assert.equal(minitz.toTZ(timeInNewYork, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 08:28:27");
+		assert.equal(minitz.toTZ(timeInLosAngeles, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 05:28:27");
 	});
 
 	test("Convert a specific date from various timezones", function () {
@@ -73,7 +73,7 @@ module.exports = function (minitz) {
 
 			const 
 				localTime = new Date(Date.parse(local)),
-				timeInLocal = minitz.toTZ(localTime, localTZ),
+				timeInLocal = minitz.fromTZ(localTime, localTZ),
 				timeInRemote = minitz.toTZ(localTime, remoteTZ);
 
 			assert.equal(timeInLocal.toLocaleString("sv-SE"), local);
