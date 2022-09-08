@@ -59,12 +59,12 @@ minitz.toTZ = function (date, tzString) {
  * 
  * @param {date} date - Tainted input date, where local time is time in target timezone
  * @param {string} tzString - Timezone string in Europe/Stockholm format
- * @param {boolean} [correctInvalidTime] - Return adjusted time if input time is during an DST switch. 
+ * @param {boolean} [throwOnInvalidTime] - Default is to return adjusted time if input time is during an DST switch. 
  *                                        E.g. assume 01:01:01 if input is 00:01:01 but time actually 
- *                                        skips from 23:59:59 to 01:00:00
+ *                                        skips from 23:59:59 to 01:00:00. Setting this flag makes the library throw instead.
  * @returns {null|date} - Normal date object with correct UTC and Local time
  */
-minitz.fromTZ = function(inputDate, tzString, correctInvalidTime) {
+minitz.fromTZ = function(inputDate, tzString, throwOnInvalidTime) {
 
 	// Get initial offset between timezones starting from input time.
 	// Then create a guessed local time by subtracting offset from input time
@@ -92,7 +92,7 @@ minitz.fromTZ = function(inputDate, tzString, correctInvalidTime) {
 		if (guessedInputDateOffset2 === 0) {
 			// All good, return local time
 			return guessedLocalDate2;
-		} else if (correctInvalidTime) {
+		} else if (!throwOnInvalidTime) {
 			// Input time is invalid, it is probably a point in time skipped by a DST switch, return the local time adjusted by initial offset
 			return guessedLocalDate;
 		} else {

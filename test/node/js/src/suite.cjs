@@ -37,10 +37,10 @@ module.exports = function (minitz) {
 
 	test("Test DST transition", function () {
 
-		const localVsRemote = function (localTZ, local, remoteTZ, remote, correct) {
+		const localVsRemote = function (localTZ, local, remoteTZ, remote) {
 			const 
 				timeInLocal = minitz.fromTZ(new Date(Date.parse(local)), localTZ),
-				timeInRemote = minitz.fromTZ(new Date(Date.parse(remote)), remoteTZ, !!correct);
+				timeInRemote = minitz.fromTZ(new Date(Date.parse(remote)), remoteTZ);
 			assert.equal(timeInLocal.getTime(), timeInRemote.getTime());
 		};
 		
@@ -56,14 +56,14 @@ module.exports = function (minitz) {
 		// 02:08 is during new york DST transition (02:00 -> 03:00), here it is corrected to 03:08 and matches correct point in another time zone
 		assert.equal(
 			minitz.fromTZ(new Date(Date.parse("2022-03-13 08:08:09")), "Europe/Stockholm").getTime(),
-			minitz.fromTZ(new Date(Date.parse("2022-03-13 02:08:09")), "America/New_York", true).getTime()
+			minitz.fromTZ(new Date(Date.parse("2022-03-13 02:08:09")), "America/New_York").getTime()
 		);
 	});
 	
 	test("Test DST transition without correction", function () {
 		// 02:08 is during new york DST transition (02:00 -> 03:00), here it is not corrected and should throw
 		assert.throws(() => {
-			minitz.fromTZ(new Date(Date.parse("2022-03-13 02:08:09")), "America/New_York", false).getTime()
+			minitz.fromTZ(new Date(Date.parse("2022-03-13 02:08:09")), "America/New_York", true).getTime()
 		});
 	});
 
