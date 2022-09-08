@@ -32,28 +32,7 @@
 
 	  ------------------------------------------------------------------------------------  */
 
-	let minitz = {};
-
-
-	/**
-	 * Check if current environment supports a timezone
-	 * 
-	 * @private
-	 * 
-	 * @param {string} tzString - Timezone string in Europe/Stockholm format
-	 * @returns {boolean}
-	 */
-	const checkTimezone = function (tzString) {
-		
-		// Assume the time zone is valid and supported if Intl.supportedValuesOf is unavailable
-		if (!Intl.supportedValuesOf) {
-			return true;
-		}
-		
-		// Check for valid timezone, remove leading/trailing whitespace from input, and always compare in lowercase
-		return Intl.supportedValuesOf("timeZone").some(x => x.toLowerCase() == tzString.trim().toLowerCase());
-
-	};
+	const minitz = {};
 
 	/**
 	 * "Converts" a date to a specific time zone
@@ -76,12 +55,7 @@
 	 * @returns {date} - Date object with local time adjusted to target timezone. UTC time WILL be off.
 	 */
 	minitz.toTZ = function (date, tzString) {
-
-		// Check timezone
-		if (!checkTimezone(tzString)) throw new Error("Invalid timezone passed to toTZ(): " + tzString);
-
 		return new Date(date.toLocaleString("sv-SE", {timeZone: tzString}));
-
 	};
 
 	/**
@@ -91,16 +65,13 @@
 	 * 
 	 * @param {date} date - Tainted input date, where local time is time in target timezone
 	 * @param {string} tzString - Timezone string in Europe/Stockholm format
-	 * @param {boolean} [correctInvalidTime] - Return adjusted time if input time is during an DST switch. 
+	 * @param {boolean} [throwOnInvalidTime] - Default is to return adjusted time if input time is during an DST switch. 
 	 *                                        E.g. assume 01:01:01 if input is 00:01:01 but time actually 
-	 *                                        skips from 23:59:59 to 01:00:00
+	 *                                        skips from 23:59:59 to 01:00:00. Setting this flag makes the library throw instead.
 	 * @returns {null|date} - Normal date object with correct UTC and Local time
 	 */
-	minitz.fromTZ = function(inputDate, tzString, correctInvalidTime) {
+	minitz.fromTZ = function(inputDate, tzString, throwOnInvalidTime) {
 
-		// Check timezone
-		if (!checkTimezone(tzString)) throw new Error("Invalid timezone passed to toTZ(): " + tzString);
-		
 		// Get initial offset between timezones starting from input time.
 		// Then create a guessed local time by subtracting offset from input time
 		// and try recreating input time using guessed local time and calculated offset.
@@ -127,7 +98,7 @@
 			if (guessedInputDateOffset2 === 0) {
 				// All good, return local time
 				return guessedLocalDate2;
-			} else if (correctInvalidTime) {
+			} else if (!throwOnInvalidTime) {
 				// Input time is invalid, it is probably a point in time skipped by a DST switch, return the local time adjusted by initial offset
 				return guessedLocalDate;
 			} else {

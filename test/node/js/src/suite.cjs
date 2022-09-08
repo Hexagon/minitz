@@ -63,7 +63,7 @@ module.exports = function (minitz) {
 	test("Test DST transition without correction", function () {
 		// 02:08 is during new york DST transition (02:00 -> 03:00), here it is not corrected and should throw
 		assert.throws(() => {
-			minitz.fromTZ(new Date(Date.parse("2022-03-13 02:08:09")), "America/New_York", true).getTime()
+			minitz.fromTZ(new Date(Date.parse("2022-03-13 02:08:09")), "America/New_York", true).getTime();
 		});
 	});
 
