@@ -35,7 +35,7 @@ module.exports = function (minitz) {
 			timeInNewYork = minitz.toTZ(timeInStockholm, "America/New_York"),
 			timeInLosAngeles = minitz.toTZ(timeInStockholm, "America/Los_Angeles");
 
-		assert.equal(timeInStockholm.toLocaleString("sv-SE"),"2022-09-08 14:28:27");
+		assert.equal(minitz.toTZ(timeInStockholm, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 14:28:27");
 
 		assert.equal(minitz.toTZ(timeInTokyo, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 21:28:27");
 		assert.equal(minitz.toTZ(timeInShanghai, "Europe/Stockholm").toLocaleString("sv-SE"),"2022-09-08 20:28:27");
