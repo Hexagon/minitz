@@ -28,27 +28,6 @@
 
 let minitz = {};
 
-
-/**
- * Check if current environment supports a timezone
- * 
- * @private
- * 
- * @param {string} tzString - Timezone string in Europe/Stockholm format
- * @returns {boolean}
- */
-const checkTimezone = function (tzString) {
-	
-	// Assume the time zone is valid and supported if Intl.supportedValuesOf is unavailable
-	if (!Intl.supportedValuesOf) {
-		return true;
-	}
-	
-	// Check for valid timezone, remove leading/trailing whitespace from input, and always compare in lowercase
-	return Intl.supportedValuesOf("timeZone").some(x => x.toLowerCase() == tzString.trim().toLowerCase());
-
-};
-
 /**
  * "Converts" a date to a specific time zone
  * 
@@ -70,12 +49,7 @@ const checkTimezone = function (tzString) {
  * @returns {date} - Date object with local time adjusted to target timezone. UTC time WILL be off.
  */
 minitz.toTZ = function (date, tzString) {
-
-	// Check timezone
-	if (!checkTimezone(tzString)) throw new Error("Invalid timezone passed to toTZ(): " + tzString);
-
 	return new Date(date.toLocaleString("sv-SE", {timeZone: tzString}));
-
 };
 
 /**
@@ -92,9 +66,6 @@ minitz.toTZ = function (date, tzString) {
  */
 minitz.fromTZ = function(inputDate, tzString, correctInvalidTime) {
 
-	// Check timezone
-	if (!checkTimezone(tzString)) throw new Error("Invalid timezone passed to toTZ(): " + tzString);
-	
 	// Get initial offset between timezones starting from input time.
 	// Then create a guessed local time by subtracting offset from input time
 	// and try recreating input time using guessed local time and calculated offset.
