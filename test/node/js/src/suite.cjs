@@ -9,14 +9,14 @@ module.exports = function (minitz) {
 
 		const 
 			sourceUTCDate = new Date(Date.UTC(2022,0,1,0,0,0)),
-			dateInSantiago = minitz.toTZ(sourceUTCDate, "America/Santiago"),
-			backToUTC = minitz.fromTZ(dateInSantiago, "America/Santiago");
+			dateInNewYork = minitz.toTZ(sourceUTCDate, "America/New_York"),
+			backToUTC = minitz.fromTZ(dateInNewYork, "America/New_York");
 
 		// Source date equal 
 		assert.equal(sourceUTCDate.getTime(), backToUTC.getTime());
 
 		// Source date does not equal date in santiago
-		assert.not.equal(sourceUTCDate.getTime(), dateInSantiago.getTime());
+		assert.not.equal(sourceUTCDate.getTime(), dateInNewYork.getTime());
 
 	});
 
