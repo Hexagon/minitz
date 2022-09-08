@@ -35,102 +35,38 @@ module.exports = function (minitz) {
 		assert.equal(timeInStockholm.getTime(), minitz.fromTZ(new Date(Date.parse("2022-09-08 05:28:27")), "America/Los_Angeles").getTime());
 	});
 
-	test("Convert a specific date from various timezones", function () {
-
-		const 
-			timeInStockholm = minitz.fromTZ(new Date(Date.parse("2022-09-08 14:28:27")), "Europe/Stockholm"),
-
-			timeInTokyo = minitz.fromTZ(new Date(Date.parse("2022-09-08 21:28:27")), "Asia/Tokyo"),
-			timeInShanghai = minitz.fromTZ(new Date(Date.parse("2022-09-08 20:28:27")), "Asia/Shanghai"),
-			timeInKyiv = minitz.fromTZ(new Date(Date.parse("2022-09-08 15:28:27")), "Europe/Kiev"),
-			timeInParis = minitz.fromTZ(new Date(Date.parse("2022-09-08 14:28:27")), "Europe/Paris"),
-			timeInLondon = minitz.fromTZ(new Date(Date.parse("2022-09-08 13:28:27")), "Europe/London"),
-			timeInNewYork = minitz.fromTZ(new Date(Date.parse("2022-09-08 08:28:27")), "America/New_York"),
-			timeInLosAngeles = minitz.fromTZ(new Date(Date.parse("2022-09-08 05:28:27")), "America/Los_Angeles");
-
-		assert.equal(timeInTokyo.getTime(),timeInStockholm.getTime());
-		assert.equal(timeInShanghai.getTime(),timeInStockholm.getTime());
-		assert.equal(timeInKyiv.getTime(),timeInStockholm.getTime());
-		assert.equal(timeInParis.getTime(),timeInStockholm.getTime());
-		assert.equal(timeInLondon.getTime(),timeInStockholm.getTime());
-		assert.equal(timeInNewYork.getTime(),timeInStockholm.getTime());
-		assert.equal(timeInLosAngeles.getTime(),timeInStockholm.getTime());
-		
-	});
-
 	test("Test DST transition", function () {
 
-		const localVsRemote = function (localTZ, local, remoteTZ, remote) {
-
+		const localVsRemote = function (localTZ, local, remoteTZ, remote, correct) {
 			const 
 				timeInLocal = minitz.fromTZ(new Date(Date.parse(local)), localTZ),
-				timeInRemote = minitz.fromTZ(new Date(Date.parse(remote)), remoteTZ);
-
+				timeInRemote = minitz.fromTZ(new Date(Date.parse(remote)), remoteTZ, !!correct);
 			assert.equal(timeInLocal.getTime(), timeInRemote.getTime());
 		};
 		
-		localVsRemote("Europe/Stockholm","2022-09-11 07:08:09","America/Santiago", "2022-09-11 02:08:09");
-		localVsRemote("Europe/Stockholm","2022-09-11 06:08:09","America/Santiago", "2022-09-11 01:08:09");
-		//localVsRemote("Europe/Stockholm","2022-09-11 05:08:09","America/Santiago", "2022-09-10 23:08:09");
-		//localVsRemote("Europe/Stockholm","2022-09-11 04:08:09","America/Santiago", "2022-09-10 22:08:09");
-		//localVsRemote("Europe/Stockholm","2022-09-11 03:08:09","America/Santiago", "2022-09-10 21:08:09");
+		localVsRemote("Europe/Stockholm","2022-03-13 06:08:09","America/New_York", "2022-03-13 00:08:09"); 
+		localVsRemote("Europe/Stockholm","2022-03-13 07:08:09","America/New_York", "2022-03-13 01:08:09");
+		localVsRemote("Europe/Stockholm","2022-03-13 08:08:09","America/New_York", "2022-03-13 03:08:09"); // <-- New york DST transition 02:00 -> 03:00
+		localVsRemote("Europe/Stockholm","2022-03-13 09:08:09","America/New_York", "2022-03-13 04:08:09"); 
+		localVsRemote("Europe/Stockholm","2022-03-13 10:08:09","America/New_York", "2022-03-13 05:08:09");
 
 	});
+
+	test("Test DST transition correction", function () {
+		// 02:08 is during new york DST transition (02:00 -> 03:00), here it is corrected to 03:08 and matches correct point in another time zone
+		assert.equal(
+			minitz.fromTZ(new Date(Date.parse("2022-03-13 08:08:09")), "Europe/Stockholm").getTime(),
+			minitz.fromTZ(new Date(Date.parse("2022-03-13 02:08:09")), "America/New_York", true).getTime()
+		);
+	});
 	
+	test("Test DST transition without correction", function () {
+		// 02:08 is during new york DST transition (02:00 -> 03:00), here it is not corrected and should throw
+		assert.throws(() => {
+			minitz.fromTZ(new Date(Date.parse("2022-03-13 02:08:09")), "America/New_York", false).getTime()
+		});
+	});
+
 	test.run();
 
 };
-
-/*
-const 
-    localTime = new Date(Date.parse("2022-09-08 14:28:27")),
-    timeInSantiago = minitz.toTZ(localTime, "America/Santiago");
-
-console.log("Local time: ", localTime.toLocaleString('sv-SE'));
-// OK Local time:  2022-09-11 07:08:09
-// OK Local time:  2022-09-11 06:08:09
-// OK Local time:  2022-09-11 05:08:09
-// OK Local time:  2022-09-11 04:08:09
-// OK Local time:  2022-09-11 03:08:09
-
-console.log("Time in Santiago: ", timeInSantiago.toLocaleString('sv-SE'));
-// OK Time in santiago: 2022-09-11 02:08:09
-// OK Time in santiago: 2022-09-11 01:08:09
-// OK Time in santiago: 2022-09-10 23:08:09
-// OK Time in santiago: 2022-09-10 22:08:09
-// OK Time in santiago: 2022-09-10 21:08:09
-*/
-
-/*
-const 
-    timeInSantiago = new Date(Date.parse("2022-10-29 23:08:09")),
-    localTime = minitz.fromTZ(timeInSantiago, "America/Santiago");
-
-console.log("Time in Santiago: ", timeInSantiago.toLocaleString('sv-SE'));
-// OK Time in santiago: 2022-09-11 02:08:09
-// OK Time in santiago: 2022-09-11 01:08:09
-// OK Time in santiago: 2022-09-11 00:08:09
-// OK Time in santiago: 2022-09-10 23:08:09
-// OK Time in santiago: 2022-09-10 22:08:09
-// OK Time in santiago: 2022-09-10 21:08:09
-// OK Time in santiago: 2022-03-26 22:08:09
-// OK Time in santiago: 2022-03-26 21:08:09
-// OK Time in santiago: 2022-10-29 20:08:09
-// OK Time in santiago: 2022-10-29 21:08:09
-// OK Time in santiago: 2022-10-29 22:08:09
-// OK Time in santiago: 2022-10-29 23:08:09
-
-console.log("Local time: ", localTime.toLocaleString('sv-SE'));
-// OK Local time:  2022-09-11 07:08:09
-// OK Local time:  2022-09-11 06:08:09
-// OK Local time:  null OR 2022-09-11 06:08:09
-// OK Local time:  2022-09-11 05:08:09
-// OK Local time:  2022-09-11 04:08:09
-// OK Local time:  2022-09-11 03:08:09
-// OK Local time:  2022-03-27 03:08:09
-// OK Local time:  2022-03-27 01:08:09
-// OK Local time:  2022-09-30 01:08:09
-// OK Local time:  2022-09-30 02:08:09
-// OK Local time:  2022-09-30 02:08:09
-// OK Local time:  2022-10-30 03:08:09
-*/
