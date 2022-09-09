@@ -1,7 +1,7 @@
 {
   "name": "minitz",
-  "version": "1.0.0",
-  "description": "Minimal utility to convert Date between timezones in JavaScript/TypeScript. Deno/Node/Browser. ESM/ComonJS.",
+  "version": "1.0.1",
+  "description": "Minimal utility to convert Date between timezones in JavaScript/TypeScript. Deno/Node/Browser. ESM/CommonJS.",
   "author": "Hexagon <github.com/hexagon>",
   "homepage": "https://hexagon.github.io/minitz",
   "repository": {
@@ -12,7 +12,9 @@
     "url": "https://github.com/hexagon/minitz/issues"
   },
   "files": [
-    "dist/*",
+    "dist/*.cjs",
+    "dist/*.js",
+    "dist/*.mjs",
     "src/*",
     "types/*",
     "SECURITY.md"
