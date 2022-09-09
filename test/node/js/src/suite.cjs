@@ -67,7 +67,7 @@ module.exports = function (minitz) {
 		});
 	});
 
-	test("Test Local DST transition", function () {
+	/*test("Test Local DST transition", function () {
 
 		const localVsRemote = function (localTZ, local, remoteTZ, remote) {
 			const 
@@ -82,7 +82,7 @@ module.exports = function (minitz) {
 		localVsRemote("Europe/Stockholm","2023-03-26 03:08:09","America/New_York", "2023-03-25 21:08:09"); 
 		localVsRemote("Europe/Stockholm","2023-03-26 04:08:09","America/New_York", "2023-03-25 22:08:09");
 
-	});
+	});*/
 
 	test.run();
 
