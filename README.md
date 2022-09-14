@@ -2,7 +2,7 @@
 
 Converting between different timezones in pure JavaScript is tricky. This minimal library tries to solve that problem in the simplest possible way. 
 
-Minitz can convert regular Date objects to/from any timezone supported by the system (Node/Deno/Browser). Compatible with both ESM or UMD/CommnJS.
+Minitz can convert date and time to/from any timezone supported by the system (Node/Deno/Browser). Compatible with both ESM or UMD/CommnJS.
 
 [![Node.js CI](https://github.com/Hexagon/minitz/actions/workflows/node.js.yml/badge.svg)](https://github.com/Hexagon/minitz/actions/workflows/node.js.yml) [![Deno CI](https://github.com/Hexagon/minitz/actions/workflows/deno.yml/badge.svg)](https://github.com/Hexagon/minitz/actions/workflows/deno.yml) 
 [![npm version](https://badge.fury.io/js/minitz.svg)](https://badge.fury.io/js/minitz) [![NPM Downloads](https://img.shields.io/npm/dm/minitz.svg)](https://www.npmjs.org/package/minitz) [![jsdelivr](https://data.jsdelivr.com/v1/package/gh/hexagon/minitz/badge?style=rounded)](https://www.jsdelivr.com/package/gh/hexagon/minitz) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/4978bdbf495941c087ecb32b120f28ff)](https://www.codacy.com/gh/Hexagon/minitz/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Hexagon/minitz&amp;utm_campaign=Badge_Grade)
@@ -94,38 +94,39 @@ To use as a [ES-module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/
 
 Assuming you have imported minitz as described under 'Installation'.
 
-Convert local time to a specific timezone
-
-```javascript
-const 
-	// Step 1: Create a date object with current local time
-	localTime = new Date(),
-
-	// Step 2: Convert to local time in America/New_York
-	timeInNewYork = minitz.toTZ(localTime, "America/New_York");
-
-console.log("Local time: ", localTime.toLocaleString("sv-SE"));
-// -> Local time:  2022-09-09 21:23:30
-
-console.log("Time in New York: ", timeInNewYork.toLocaleString("sv-SE"));
-// -> Time in New York:  2022-09-09 15:23:30
-```
-
 Convert from a specific timezone to local time
 
 ```javascript
-const 
-	// Step 1: Create a date object with local time in target timezone
-	timeInNewYork = new Date(Date.parse("2022-09-10 23:08:09")),
+// Convert 2022-09-10 23:08:09 in New York to local time (in this example Europe/Stockholm)
+console.log("Local time: ", minitz(2022, 9, 10, 23, 8, 9, "America/New_York").toLocaleString("sv-SE"));
+// Local time:  2022-09-11 05:08:09
+```
 
-	// Step 2: Convert to "real" local time using minitz.fromTZ
-	localTime = minitz.fromTZ(timeInNewYork, "America/New_York");
+Convert local time to a specific timezone
 
-console.log("Time in New York: ", timeInNewYork.toLocaleString("sv-SE"));
-// Time in New York:  2022-09-10 23:08:09
+```javascript
+//  Convert to local time to time in America/New_York
+//  As time in other timezones than local cannot be represented correctly by a date object
+//  a generic object is returned
+console.log("Time in New York: ", minitz.toTZ(new Date(), "America/New_York"));
+// -> Time in New York: 
+//  {
+//     year: 2022,
+//     month: 9,
+//     day: 14,
+//     hour: 17,
+//     minute: 29,
+//     second: 42,
+//     timezone: 'America/New_York'
+//  }
+```
 
-console.log("Local time: ", localTime.toLocaleString("sv-SE"));
-// Local time (Europe/Stockholm):  2022-09-11 05:08:09
+Convert local time to specific timezone, returning faux date object with normal formatting functions available
+
+```javascript
+const timeInNewYork = minitz.toTZ(new Date(), "America/New_York");
+console.log("Time in New York printed with system locale: ", minitz.fauxDate(timeInNewYork).toLocaleString("sv-SE"));
+// -> Time in New York printed with system locale:  2022-09-14 17:29:42
 ```
 
 ## Contributing

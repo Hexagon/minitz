@@ -9,80 +9,83 @@ module.exports = function (minitz) {
 
 		const 
 			sourceUTCDate = new Date(Date.UTC(2022,0,1,0,0,0)),
-			dateInNewYork = minitz.toTZ(sourceUTCDate, "America/New_York"),
-			backToUTC = minitz.fromTZ(dateInNewYork, "America/New_York");
+			dateInNewYork = minitz.toTZ(sourceUTCDate, "America/New_York");
+
+		const
+			backToUTC = minitz.fromTZ(dateInNewYork);
 
 		// Source date equal 
 		assert.equal(sourceUTCDate.getTime(), backToUTC.getTime());
-
-		// Source date does not equal date in santiago
-		assert.not.equal(sourceUTCDate.getTime(), dateInNewYork.getTime());
 
 	});
 
 	test("Convert a specific date to various timezones", function () {
 
 		const 
-			timeInStockholm = minitz.fromTZ(new Date(Date.parse("2022-09-08 14:28:27")), "Europe/Stockholm");
+			timeInStockholm = minitz(2022,9,8,14,28,27, "Europe/Stockholm");
 
 		assert.equal(timeInStockholm.getTime(), 1662640107000);
-		assert.equal(timeInStockholm.getTime(), minitz.fromTZ(new Date(Date.parse("2022-09-08 21:28:27")), "Asia/Tokyo").getTime());
-		assert.equal(timeInStockholm.getTime(), minitz.fromTZ(new Date(Date.parse("2022-09-08 20:28:27")), "Asia/Shanghai").getTime());
-		assert.equal(timeInStockholm.getTime(), minitz.fromTZ(new Date(Date.parse("2022-09-08 15:28:27")), "Europe/Kiev").getTime());
-		assert.equal(timeInStockholm.getTime(), minitz.fromTZ(new Date(Date.parse("2022-09-08 14:28:27")), "Europe/Paris").getTime());
-		assert.equal(timeInStockholm.getTime(), minitz.fromTZ(new Date(Date.parse("2022-09-08 13:28:27")), "Europe/London").getTime());
-		assert.equal(timeInStockholm.getTime(), minitz.fromTZ(new Date(Date.parse("2022-09-08 08:28:27")), "America/New_York").getTime());
-		assert.equal(timeInStockholm.getTime(), minitz.fromTZ(new Date(Date.parse("2022-09-08 05:28:27")), "America/Los_Angeles").getTime());
+		assert.equal(timeInStockholm.getTime(), minitz(2022,9,8,21,28,27, "Asia/Tokyo").getTime());
+		assert.equal(timeInStockholm.getTime(), minitz(2022,9,8,20,28,27, "Asia/Shanghai").getTime());
+		assert.equal(timeInStockholm.getTime(), minitz(2022,9,8,15,28,27, "Europe/Kiev").getTime());
+		assert.equal(timeInStockholm.getTime(), minitz(2022,9,8,14,28,27, "Europe/Paris").getTime());
+		assert.equal(timeInStockholm.getTime(), minitz(2022,9,8,13,28,27, "Europe/London").getTime());
+		assert.equal(timeInStockholm.getTime(), minitz(2022,9,8,8,28,27, "America/New_York").getTime());
+		assert.equal(timeInStockholm.getTime(), minitz(2022,9,8,5,28,27, "America/Los_Angeles").getTime());
 	});
 
 	test("Test Remote DST transition", function () {
 
-		const localVsRemote = function (localTZ, local, remoteTZ, remote) {
+		const localVsRemote = function (local, remote) {
 			const 
-				timeInLocal = minitz.fromTZ(new Date(Date.parse(local)), localTZ),
-				timeInRemote = minitz.fromTZ(new Date(Date.parse(remote)), remoteTZ);
+				timeInLocal = minitz.fromTZ(local),
+				timeInRemote = minitz.fromTZ(remote);
 			assert.equal(timeInLocal.getTime(), timeInRemote.getTime());
 		};
 		
-		localVsRemote("Europe/Stockholm","2022-03-13 06:08:09","America/New_York", "2022-03-13 00:08:09"); 
-		localVsRemote("Europe/Stockholm","2022-03-13 07:08:09","America/New_York", "2022-03-13 01:08:09");
-		localVsRemote("Europe/Stockholm","2022-03-13 08:08:09","America/New_York", "2022-03-13 03:08:09"); // <-- New york DST transition 02:00 -> 03:00
-		localVsRemote("Europe/Stockholm","2022-03-13 09:08:09","America/New_York", "2022-03-13 04:08:09"); 
-		localVsRemote("Europe/Stockholm","2022-03-13 10:08:09","America/New_York", "2022-03-13 05:08:09");
+		localVsRemote(minitz.tp(2022,3,13,6,8,9,"Europe/Stockholm"),minitz.tp(2022,3,13,0,8,9,"America/New_York")); 
+		localVsRemote(minitz.tp(2022,3,13,7,8,9,"Europe/Stockholm"),minitz.tp(2022,3,13,1,8,9,"America/New_York"));
+		localVsRemote(minitz.tp(2022,3,13,8,8,9,"Europe/Stockholm"),minitz.tp(2022,3,13,3,8,9,"America/New_York")); // <-- New york DST transition 02:00 -> 03:00
+		localVsRemote(minitz.tp(2022,3,13,9,8,9,"Europe/Stockholm"),minitz.tp(2022,3,13,4,8,9,"America/New_York")); 
+		localVsRemote(minitz.tp(2022,3,13,10,8,9,"Europe/Stockholm"),minitz.tp(2022,3,13,5,8,9,"America/New_York"));
 
 	});
 
 	test("Test DST transition correction", function () {
 		// 02:08 is during new york DST transition (02:00 -> 03:00), here it is corrected to 03:08 and matches correct point in another time zone
 		assert.equal(
-			minitz.fromTZ(new Date(Date.parse("2022-03-13 08:08:09")), "Europe/Stockholm").getTime(),
-			minitz.fromTZ(new Date(Date.parse("2022-03-13 02:08:09")), "America/New_York").getTime()
+			minitz.fromTZ(minitz.tp(2022,3,13,8,8,9,"Europe/Stockholm")).getTime(),
+			minitz.fromTZ(minitz.tp(2022,3,13,2,8,9,"America/New_York")).getTime()
 		);
 	});
 	
 	test("Test DST transition without correction", function () {
 		// 02:08 is during new york DST transition (02:00 -> 03:00), here it is not corrected and should throw
 		assert.throws(() => {
-			minitz.fromTZ(new Date(Date.parse("2022-03-13 02:08:09")), "America/New_York", true).getTime();
+			minitz.fromTZ(minitz.tp(2022,3,13,2,8,9,"America/New_York"), true).getTime();
 		});
 	});
 
-	/*test("Test Local DST transition", function () {
+	test("Test Local DST transition", function () {
 
-		const localVsRemote = function (localTZ, local, remoteTZ, remote) {
+		const localVsRemote = function (local, remote) {
 			const 
-				timeInLocal = minitz.fromTZ(new Date(Date.parse(local)), localTZ),
-				timeInRemote = minitz.fromTZ(new Date(Date.parse(remote)), remoteTZ);
+				timeInLocal = minitz.fromTZ(local),
+				timeInRemote = minitz.fromTZ(remote);
 			assert.equal(timeInLocal.getTime(), timeInRemote.getTime());
 		};
 		
-		localVsRemote("Europe/Stockholm","2023-03-26 00:08:09","America/New_York", "2023-03-25 19:08:09"); 
-		localVsRemote("Europe/Stockholm","2023-03-26 01:08:09","America/New_York", "2023-03-25 20:08:09");
-		localVsRemote("Europe/Stockholm","2023-03-26 02:08:09","America/New_York", "2023-03-25 21:08:09"); // <-- Stockholm 02:00 -> 03:00
-		localVsRemote("Europe/Stockholm","2023-03-26 03:08:09","America/New_York", "2023-03-25 21:08:09"); 
-		localVsRemote("Europe/Stockholm","2023-03-26 04:08:09","America/New_York", "2023-03-25 22:08:09");
+		localVsRemote(minitz.tp(2023,3,26,0,8,9,"Europe/Stockholm"), minitz.tp(2023,3,25,19,8,9,"America/New_York")); 
+		localVsRemote(minitz.tp(2023,3,26,1,8,9,"Europe/Stockholm"), minitz.tp(2023,3,25,20,8,9,"America/New_York"));
+		localVsRemote(minitz.tp(2023,3,26,3,8,9,"Europe/Stockholm"), minitz.tp(2023,3,25,21,8,9,"America/New_York")); // <-- Stockholm 02:00 -> 03:00
+		localVsRemote(minitz.tp(2023,3,26,4,8,9,"Europe/Stockholm"), minitz.tp(2023,3,25,22,8,9,"America/New_York"));
 
-	});*/
+	});
+
+	test("Test faux date printing", function () {
+		const timeInNewYork = minitz.toTZ(minitz.fromTZ(minitz.tp(2023,3,25,19,8,9), "America/New_York"));
+		assert.equal( minitz.fauxDate(timeInNewYork).toLocaleString("sv-SE"), "2023-03-25 19:08:09");
+	});
 
 	test.run();
 
