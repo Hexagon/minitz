@@ -144,17 +144,19 @@ new Date().toLocaleString(&quot;sv-SE&quot;, { timeZone: &quot;Asia/Tokyo&quot; 
 </code></pre>
 <p>However - if you want to convert date/time <em>from</em> another timezone, or convert between different timezones, things get trickier.</p>
 <p>Minitz is a minimal library built to solve the problem in the simplest possible way, and work in all environments (Node/Deno/Browser, ESM/UMD/CommonJS).</p>
+<p>Short examples on converting from a remote timezone, and converting between different timezones.</p>
 <pre class="prettyprint source lang-javascript"><code>// Get local time from time in Asia/Tokyo, using minitz and vanilla js
 const localTime = minitz(2022,9,15,23,0,0,&quot;Asia/Tokyo&quot;)
-localTime.toLocaleString(&quot;sv-SE&quot;);
-// -> YYYY-MM-DD 
+console.log( localTime.toLocaleString(&quot;sv-SE&quot;) );
+// -> 2022-09-15 16:00:00
 </code></pre>
 <pre class="prettyprint source lang-javascript"><code>// Get time in America/New_York from time in Asia/Tokyo, using minitz and vanilla js
-const localTime = minitz(2022,9,15,23,0,0,&quot;Asia/Tokyo&quot;),
-localTime.toLocaleString(&quot;sv-SE&quot;, timeZone: { &quot;America/New_York&quot;});
-// -> YYYY-MM-DD 
+// Also demonstrates that it's possible to use ISO8601 strings as input to minitz, through `.fromTZISO`
+const localTime = minitz.fromTZISO(&quot;2022-09-15 23:00:00&quot;,&quot;Asia/Tokyo&quot;);
+console.log( localTime.toLocaleString(&quot;sv-SE&quot;, { timeZone: &quot;America/New_York&quot; }) );
+// -> 2022-09-15 10:00:00
 </code></pre>
-<p>Full documentation available at <a href="https://hexagon.github.io/minitz/">hexagon.github.io/minitz</a>.</p>
+<p>More examples further down, and full documentation available at <a href="https://hexagon.github.io/minitz/">hexagon.github.io/minitz</a>.</p>
 <h2>Installation</h2>
 <h3>Node.js</h3>
 <p><code>npm install minitz --save</code></p>
@@ -218,6 +220,7 @@ console.log(&quot;Local time: &quot;, minitz(&quot;2022-09-10 23:08:99&quot;, &q
 <pre class="prettyprint source lang-javascript"><code>console.log(&quot;Time in New York printed with system locale: &quot;, new Date().toLocaleString(&quot;sv-SE&quot;, { timeZone: &quot;America/New_York&quot;}));
 // -> Time in New York printed with system locale:  2022-09-14 17:29:42
 </code></pre>
+<p>If you need to use the result in any way, it's better to use minitz to convert to a remote timezone. That way you get the results as an object, which also includes which timezone the time is converted to.</p>
 <pre class="prettyprint source lang-javascript"><code>//  Convert to local time to time in America/New_York
 //  As time in other timezones than local cannot be represented correctly by a date object
 //  a generic object is returned
