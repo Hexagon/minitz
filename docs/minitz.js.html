@@ -103,7 +103,7 @@
   <nav>
     <div id="menu-container" class="scrollbar-inner">
         <div class="nav-container">
-            
+            <h3 id="global-nav"><a href="global.html">Global</a></h3>
         </div>
     </div>
   </nav>
@@ -122,11 +122,11 @@
   <article>
     <pre class="prettyprint source linenums"><code>/* ------------------------------------------------------------------------------------
 
-  minitz - MIT License - Hexagon &lt;hexagon@56k.guru>
+	minitz - 2.0.1 - MIT License - Hexagon &lt;hexagon@56k.guru>
 
-  ------------------------------------------------------------------------------------
+	------------------------------------------------------------------------------------
 
-  License:
+	License:
 
 	Copyright (c) 2022 Hexagon &lt;hexagon@56k.guru>
 
@@ -147,85 +147,244 @@
 	THE SOFTWARE.
 
   ------------------------------------------------------------------------------------  */
-
-const minitz = {};
-
+  
 /**
- * "Converts" a date to a specific time zone
- * 
- * **Note:** The resulting Date object will have local time set to target timezone, 
- * but any functions/formatting working with UTC time, or offset will be misleading.
- * 
- * Only use this function to get a formatted local time string.
- * 
- * Example:
- *   let normalDate = new Date(); // d is a normal Date instance, with local timezone and correct utc representation
- *       tzDate = minitz.toTZ(d, 'America/New_York') // d is a tainted Date instance, where getHours() 
- *                                                 (for example) will return local time in new york, but getUTCHours()
- *                                                 will return something irrelevant.
+ * @typedef {Object} TimePoint
+ * @property {Number} year - 1970--
+ * @property {Number} month - 1-12
+ * @property {Number} day - 1-31
+ * @property {Number} hour - 0-24
+ * @property {Number} minute - 0-60
+ * @property {Number} second - 0-60
+ * @property {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
+ */
+
+/*
+ * Converts a date/time from a specific timezone to a normal date object with system local time
+ *
+ * Shortcut for minitz.fromTZ(minitz.tp(...));
  * 
  * @public
  * 
- * @param {date} date - Input date
- * @param {string} tzString - Timezone string in Europe/Stockholm format
- * @returns {date} - Date object with local time adjusted to target timezone. UTC time WILL be off.
- */
-minitz.toTZ = function (date, tzString) {
-	return new Date(date.toLocaleString("sv-SE", {timeZone: tzString}));
+ * @param {Number} year - 1970--
+ * @param {Number} month - 1-12
+ * @param {Number} day - 1-31
+ * @param {Number} hour - 0-24
+ * @param {Number} minute - 0-60
+ * @param {Number} second - 0-60
+ * @param {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
+ * @param {boolean} [throwOnInvalidTime] - Default is to return adjusted time if input time is during an DST switch. 
+ *										E.g. assume 01:01:01 if input is 00:01:01 but time actually 
+ *										skips from 23:59:59 to 01:00:00. Setting this flag makes the library throw instead.
+ * @returns {date} - Normal date object with correct UTC and system local time
+ * 
+*/
+const minitz = function (year, month, day, hour, minute, second, timezone, throwOnInvalidTime) {
+	return minitz.fromTZ(minitz.tp(year, month, day, hour, minute, second, timezone), throwOnInvalidTime);
 };
 
 /**
- * Reverse of toTZ
+ * Converts a date/time from a specific timezone to a normal date object with system local time
  * 
  * @public
  * 
- * @param {date} date - Tainted input date, where local time is time in target timezone
- * @param {string} tzString - Timezone string in Europe/Stockholm format
+ * @param {string} localTimeString - ISO8601 formatted local time string, non UTC
+ * @param {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
  * @param {boolean} [throwOnInvalidTime] - Default is to return adjusted time if input time is during an DST switch. 
- *                                        E.g. assume 01:01:01 if input is 00:01:01 but time actually 
- *                                        skips from 23:59:59 to 01:00:00. Setting this flag makes the library throw instead.
- * @returns {null|date} - Normal date object with correct UTC and Local time
+ *										E.g. assume 01:01:01 if input is 00:01:01 but time actually 
+ *										skips from 23:59:59 to 01:00:00. Setting this flag to true makes the library throw instead.
+ * @returns {date} - Normal date object
  */
-minitz.fromTZ = function(inputDate, tzString, throwOnInvalidTime) {
+minitz.fromTZISO = function(localTimeString, timezone, throwOnInvalidTime) {
+	return minitz.fromTZ(parseISOLocal(localTimeString, timezone), throwOnInvalidTime);
+};
 
-	// Get initial offset between timezones starting from input time.
-	// Then create a guessed local time by subtracting offset from input time
-	// and try recreating input time using guessed local time and calculated offset.
-	const 
-		inputDateWithOffset = new Date(inputDate.toLocaleString("sv-SE", {timeZone: tzString})),
-		offset = inputDate.getTime() - inputDateWithOffset.getTime(),
-		guessedLocalDate = new Date(inputDate.getTime() + offset),
-		guessedInputDate = new Date(guessedLocalDate.toLocaleString("sv-SE", {timeZone: tzString}));
+/**
+ * Converts a date/time from a specific timezone to a normal date object with system local time
+ * 
+ * @public
+ * 
+ * @param {TimePoint} date - Object with specified timezone
+ * @param {boolean} [throwOnInvalidTime] - Default is to return adjusted time if input time is during an DST switch. 
+ *										E.g. assume 01:01:01 if input is 00:01:01 but time actually 
+ *										skips from 23:59:59 to 01:00:00. Setting this flag to true makes the library throw instead.
+ * @returns {date} - Normal date object
+ */
+minitz.fromTZ = function(timePoint, throwOnInvalidTime) {
 	
-	// Check if recreated input time matches actual input time
 	const 
-		guessedInputDateOffset = guessedInputDate.getTime() - inputDate.getTime();
-	if (guessedInputDateOffset === 0) {
-		// All good, return local time
+
+		// Construct a faux Date object with UTC date/time set to local date/time in source timezone
+		inputDate = new Date(Date.UTC(
+			timePoint.year,
+			timePoint.month - 1,
+			timePoint.day,
+			timePoint.hour,
+			timePoint.minute,
+			timePoint.second
+		)),
+
+		// Get offset between UTC and source timezone
+		offset = getTimezoneOffset(timePoint.timezone, inputDate),
+
+		// Remove offset from inputDate to hopefully get a true date object
+		guessedLocalDate = new Date(inputDate.getTime() - offset),
+
+		// Get offset between UTC and guessed time in target timezone
+		guessedInputDateOffset = getTimezoneOffset(timePoint.timezone, guessedLocalDate);
+
+	// If offset between guessed true date object and UTC matches initial calculation, the guess
+	// were spot on
+	if ((guessedInputDateOffset - offset) === 0) {
 		return guessedLocalDate;
 	} else {
-		// Not quite there yet, make a second try on guessing local time, adjust by the offset from previous guess
+		// Not quite there yet, make a second try on guessing local time, adjust by the offset indicated by previous guess
 		// Try recreating input time again
 		// Then calculate and check offset again
 		const 
-			guessedLocalDate2 = new Date(inputDate.getTime() + offset - guessedInputDateOffset),
-			guessedInputDate2 = new Date(guessedLocalDate2.toLocaleString("sv-SE", {timeZone: tzString})),
-			guessedInputDateOffset2 = guessedInputDate2.getTime() - inputDate.getTime();
-		if (guessedInputDateOffset2 === 0) {
+			guessedLocalDate2 = new Date(inputDate.getTime() - guessedInputDateOffset),
+			guessedInputDateOffset2 = getTimezoneOffset(timePoint.timezone, guessedLocalDate2);
+		if ((guessedInputDateOffset2 - guessedInputDateOffset) === 0) {
 			// All good, return local time
 			return guessedLocalDate2;
 		} else if (!throwOnInvalidTime) {
-			// Input time is invalid, it is probably a point in time skipped by a DST switch, return the local time adjusted by initial offset
+			// This guess wasn't spot on either, we're most probably dealing with a DST transition
+			// - return the local time adjusted by _initial_ offset
 			return guessedLocalDate;
 		} else {
 			// Input time is invalid, and the library is instructed to throw, so let's do it
 			throw new Error("Invalid date passed to fromTZ()");
 		}
 	}
+};
 
+/**
+ * Converts a date to a specific time zone and return a object containing year, month, 
+ * day, hour, (...) and timezone used for conversion
+ * 
+ * **Please note**: If you just want to _display_ date/time in another 
+ * time zone, use vanilla JS. See example below.
+ * 
+ * @public
+ * 
+ * @param {date} date - Input date
+ * @param {string} [tzString] - Timezone string in Europe/Stockholm format
+ * 
+ * @returns {TimePoint}
+ * 
+ * @example &lt;caption>Example using minitz:&lt;/caption>
+ * let normalDate = new Date(); // d is a normal Date instance, with local timezone and correct utc representation
+ * 
+ * tzDate = minitz.toTZ(d, 'America/New_York');
+ * 
+ * // Will result in the following object:
+ * // {
+ * //  year: 2022,
+ * //  month: 9,
+ * //  day: 28,
+ * //  hour: 13,
+ * //  minute: 28,
+ * //  second: 28,
+ * //  timezone: "America/New_York"
+ * // }
+ * 
+ * @example &lt;caption>Example using vanilla js:&lt;/caption>
+ * console.log(
+ *	// Display current time in America/New_York, using sv-SE locale
+ *	new Date().toLocaleTimeString("sv-SE", { timeZone: "America/New_York" }),
+ * );
+ * 
+ */
+minitz.toTZ = function (date, tzString) {
+	const target = new Date(date.toLocaleString("sv-SE", {timeZone: tzString}));
+	return {
+		year: target.getFullYear(),
+		month: target.getMonth() + 1,
+		day: target.getDate(),
+		hour: target.getHours(),
+		minute: target.getMinutes(),
+		second: target.getSeconds(),
+		timezone: tzString
+	};
+};
+
+/*
+ * Convenience function wich return a TimePoint object for later use by fromTZ
+ *
+ * @public
+ * 
+ * @param {Number} year - 1970--
+ * @param {Number} month - 1-12
+ * @param {Number} day - 1-31
+ * @param {Number} hour - 0-24
+ * @param {Number} minute - 0-60
+ * @param {Number} second - 0-60
+ * @param {string} timezone - Time zone in format 'Europe/Stockholm'
+ * 
+ * @returns {TimePoint}
+ * 
+*/
+minitz.tp = (y,m,d,h,i,s,t) => { return { year: y, month: m, day: d, hour: h, minute: i, second: s, timezone: t }; };
+
+/**
+ * Helper function that return the current UTC offset (in ms) for a specific timezone, and a specific point in time
+ * 
+ * @private
+ * 
+ * @param {timeZone} string - Target time zone in IANA database format 'Europe/Stockholm'
+ * @param {date} [date] - Point in time to use as base for offset calculation
+ * 
+ * @returns {number} - Offset in ms between UTC and timeZone
+ */
+const getTimezoneOffset = (timeZone, date = new Date()) => {
+	const tz = date.toLocaleString("en", {timeZone, timeStyle: "long"}).split(" ").slice(-1)[0];
+	const dateString = date.toString();
+	return Date.parse(`${dateString} UTC`) - Date.parse(`${dateString} ${tz}`);
+};
+
+
+/**
+ * Helper function that takes a ISO8001 local date time string and creates a Date object. Throws on failure. Throws on UTC-flag.
+ * 
+ * @private
+ * 
+ * @param {string} dateTimeString - an ISO 8601 format date and time string
+ *					  with all components, e.g. 2015-11-24T19:40:00
+ * @returns {TimePoint} - TimePoint instance from parsing the string
+ */
+const parseISOLocal = function (dateTimeString, timezone) {
+	const dateTimeStringSplit = dateTimeString.split(/\D/);
+
+	// Check for completeness
+	if (dateTimeStringSplit.length &lt; 6) {
+		throw new Error("minitz: Incomplete ISO8601 passed to parser.");
+	}
+
+	const
+		year = parseInt(dateTimeStringSplit[0], 10),
+		month = parseInt(dateTimeStringSplit[1], 10),
+		day = parseInt(dateTimeStringSplit[2], 10),
+		hour = parseInt(dateTimeStringSplit[3], 10),
+		minute = parseInt(dateTimeStringSplit[4], 10),
+		second = parseInt(dateTimeStringSplit[5], 10);
+
+	// Check parts for numeric
+	if( isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour) || isNaN(minute) || isNaN(second) ) {
+		throw new Error("minitz: Could not parse ISO8601 string.");
+	} else {
+		// Check for UTC flag
+		if ((dateTimeString.indexOf("Z") > 0)) {
+			throw new Error("minitz: Refuses to parse ISO8601 string with UTC-flag, can only handle local time.");
+		} else {
+			// Handle date as local time, and convert from specified time zone
+			// Note: Date alreadu validated by the UTC-parsing
+			return minitz.tp(year, month, day, hour, minute, second, timezone);
+		}
+	}
 };
 
 minitz.minitz = minitz;
+
 export default minitz;
 export { minitz };</code></pre>
   </article>

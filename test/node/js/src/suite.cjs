@@ -82,9 +82,26 @@ module.exports = function (minitz) {
 
 	});
 
-	test("Test faux date printing", function () {
-		const timeInNewYork = minitz.toTZ(minitz.fromTZ(minitz.tp(2023,3,25,19,8,9), "America/New_York"));
-		assert.equal( minitz.fauxDate(timeInNewYork).toLocaleString("sv-SE"), "2023-03-25 19:08:09");
+	test("Timezone conversion", function () {
+		const timeInNewYork = minitz(2023,3,25,19,8,9, "America/New_York");
+		assert.equal( timeInNewYork.toLocaleString("sv-SE", { timeZone: "America/New_York"}), "2023-03-25 19:08:09");
+	});
+
+	test("Timezone conversion using fromTZISO", function () {
+		const timeInNewYork = minitz.fromTZISO("2023-03-25 19:08:09", "America/New_York");
+		assert.equal( timeInNewYork.toLocaleString("sv-SE", { timeZone: "America/New_York"}), "2023-03-25 19:08:09");
+	});
+
+	test("Timezone conversion throws on incomplete time", function () {
+		assert.throws(() => minitz.fromTZISO("2023-03-25 1908:09", "America/New_York"));
+	});
+	
+	test("Timezone conversion throws on non numeric time", function () {
+		assert.throws(() => minitz.fromTZISO("2023-a-25 19:08:09", "America/New_York"));
+	});
+
+	test("Timezone conversion throws on UTC time", function () {
+		assert.throws(() => minitz.fromTZISO("2023-03-25 19:08:09Z", "America/New_York"));
 	});
 
 	test.run();
