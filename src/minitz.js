@@ -57,9 +57,9 @@
  * @returns {date} - Normal date object with correct UTC and system local time
  * 
 */
-const minitz = function (year, month, day, hour, minute, second, timezone, throwOnInvalidTime) {
+function minitz(year, month, day, hour, minute, second, timezone, throwOnInvalidTime) {
 	return minitz.fromTZ(minitz.tp(year, month, day, hour, minute, second, timezone), throwOnInvalidTime);
-};
+}
 
 /**
  * Converts a date/time from a specific timezone to a normal date object with system local time
