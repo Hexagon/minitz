@@ -24,7 +24,7 @@ Scan through our [existing issues](https://github.com/hexagon/minitz/issues) to 
 
 #### Setting up the environment
 
-We recommend using VS Code with eslint extensions, which will automatically check your code against the defined rules as you write it.
+We recommend using VS Code with eslint extensions. It will automatically check your code against the defined rules.
 
 1.  Fork the repository.
     -   Using GitHub Desktop:
@@ -52,7 +52,7 @@ When you're done with the changes, create a pull request, also known as a PR.
 -   Don't forget to [link PR to issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) if you are solving one.
 -   Enable the checkbox to [allow maintainer edits](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/allowing-changes-to-a-pull-request-branch-created-from-a-fork) so that the branch can be updated for a merge.
 Once you submit your PR, a team member will review your proposal. We may ask questions or request for additional information.
--   We may ask for changes to be made before a PR can be merged, either using [suggested changes](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/incorporating-feedback-in-your-pull-request) or pull request comments. You can apply suggested changes directly through the UI. You can make any other changes in your fork, then commit them to your branch, the changes will automatically be reflected in the PR.
+-   We may ask for changes to be made before a PR can be merged using [suggested changes](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/incorporating-feedback-in-your-pull-request) or pull request comments. You can apply suggested changes directly through the UI. You can make any other changes in your fork, then commit them to your branch.  The changes will automatically be reflected in the PR.
 -   As you update your PR and apply changes, mark each conversation as [resolved](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request#resolving-conversations).
 -   If you run into any merge issues, checkout this [git tutorial](https://lab.github.com/githubtraining/managing-merge-conflicts) to help you resolve merge conflicts and other issues.
 
