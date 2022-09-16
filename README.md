@@ -122,7 +122,7 @@ To use as an [ES-module](https://developer.mozilla.org/en-US/docs/Web/JavaScript
 
 ### More examples
 
-The below examples will work only if you have imported minitz as described in the 'Installation' section, if that's not the case results may vary.
+The examples below will work only if you have imported minitz as described in the 'Installation' section.  If that's not the case the results may vary.
 
 #### Convert a specific timezone to local time
 
@@ -144,7 +144,7 @@ console.log("Local time: ", minitz("2022-09-10 23:08:99", "America/New_York").to
 
 #### Convert local time to a specific timezone
 
-Provided that you only neeed to display the result, converting local time to specific timezone is best achieved with vanilla JavaScript.
+Provided that you only need to display the result, converting local time to specific timezone is best achieved with vanilla JavaScript.
 
 ```javascript
 console.log("Time in New York printed with system locale: ", new Date().toLocaleString("sv-SE", { timeZone: "America/New_York"}));

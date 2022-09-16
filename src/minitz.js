@@ -53,7 +53,7 @@
  * @param {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
  * @param {boolean} [throwOnInvalidTime] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
  *										E.g. Value "01:01:01" is returned if input time is 00:01:01 while one hour got actually
- *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw instead.
+ *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw an exception instead.
  * @returns {date} - Normal date object with correct UTC and system local time
  *
 */
@@ -70,7 +70,7 @@ function minitz(year, month, day, hour, minute, second, timezone, throwOnInvalid
  * @param {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
  * @param {boolean} [throwOnInvalidTime] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
  *										E.g. Value "01:01:01" is returned if input time is 00:01:01 while one hour got actually
- *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw instead.
+ *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw an exception instead.
  * @returns {date} - Normal date object
  */
 minitz.fromTZISO = function(localTimeString, timezone, throwOnInvalidTime) {
@@ -85,7 +85,7 @@ minitz.fromTZISO = function(localTimeString, timezone, throwOnInvalidTime) {
  * @param {TimePoint} date - Object with specified timezone
  * @param {boolean} [throwOnInvalidTime] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
  *										E.g. Value "01:01:01" is returned if input time is 00:01:01 while one hour got actually
- *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw instead.
+ *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw an exception instead.
  * @returns {date} - Normal date object
  */
 minitz.fromTZ = function(timePoint, throwOnInvalidTime) {
