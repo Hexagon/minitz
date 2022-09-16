@@ -222,7 +222,8 @@ const getTimezoneOffset = (timeZone, date = new Date()) => {
 
 
 /**
- * Helper function that takes a ISO8001 local date time string and creates a Date object. Throws on failure. Throws on UTC-flag.
+ * Helper function that takes a ISO8001 local date time string and creates a Date object.
+ * Throws on failure. Throws on invalid date or time.
  * 
  * @private
  * 
@@ -250,9 +251,20 @@ const parseISOLocal = function (dateTimeString, timezone) {
 	if( isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour) || isNaN(minute) || isNaN(second) ) {
 		throw new Error("minitz: Could not parse ISO8601 string.");
 	} else {
+		// Check generated date
+		const generatedDate = new Date(Date.UTC(year, month-1, day, hour, minute, second));
+		if (!(year == generatedDate.getUTCFullYear()
+			&& month == generatedDate.getUTCMonth()+1
+			&& day == generatedDate.getUTCDate()
+			&& hour == generatedDate.getUTCHours()
+			&& minute == generatedDate.getUTCMinutes()
+			&& second == generatedDate.getUTCSeconds())) {
+			throw new Error("minitz: ISO8601 string contains invalid date or time");
+		}
 		// Check for UTC flag
 		if ((dateTimeString.indexOf("Z") > 0)) {
-			throw new Error("minitz: Refuses to parse ISO8601 string with UTC-flag, can only handle local time.");
+			// Handle date as UTC time, ignoring input timezone
+			return minitz.tp(year, month, day, hour, minute, second, "Etc/UTC");
 		} else {
 			// Handle date as local time, and convert from specified time zone
 			// Note: Date alreadu validated by the UTC-parsing
