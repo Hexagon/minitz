@@ -130,21 +130,21 @@
 <li>Convert dates between any timezone supported by the system.</li>
 <li>Parses ISO8601 time strings.</li>
 <li>MIT licensed, use the library any way you want. For real.</li>
-<li>Minimal, no dependencies. Relies on JavaScript Intl and current best practises.</li>
+<li>Minimal, no dependencies. Relies on JavaScript Intl and current best practices.</li>
 <li>Works in Node.js &gt;=14.0 (both require and import).</li>
 <li>Works in Deno &gt;=1.8.</li>
 <li>Works in browsers as standalone, UMD or ES-module.</li>
 <li>Includes <a href="https://www.typescriptlang.org/">TypeScript</a> typings.</li>
 </ul>
 <h2>Usage</h2>
-<p>Converting a Date object to another timezone in JavaScript is possible using Intl feature of vanilla JS.</p>
+<p>Converting a Date object to another timezone in JavaScript is possible using the Intl feature of vanilla JS.</p>
 <pre class="prettyprint source lang-javascript"><code>// Get current time in Asia/Tokyo, using vanilla js
 new Date().toLocaleString(&quot;sv-SE&quot;, { timeZone: &quot;Asia/Tokyo&quot; });
 // -> 2022-09-15 17:23:45
 </code></pre>
 <p>However - if you want to convert date/time <em>from</em> another timezone, or convert between different timezones, things get trickier.</p>
-<p>Minitz is a minimal library built to solve the problem in the simplest possible way, and work in all environments (Node/Deno/Browser, ESM/UMD/CommonJS).</p>
-<p>Short examples on converting from a remote timezone, and converting between different timezones.</p>
+<p>Minitz is a minimal library built to solve the problem in the simplest possible way, and made to work in all environments (Node/Deno/Browser, ESM/UMD/CommonJS).</p>
+<p>Simple examples of conversion from a remote timezone, and a conversion between different timezones.</p>
 <pre class="prettyprint source lang-javascript"><code>// Get local time from time in Asia/Tokyo, using minitz and vanilla js
 const localTime = minitz(2022,9,15,23,0,0,&quot;Asia/Tokyo&quot;)
 console.log( localTime.toLocaleString(&quot;sv-SE&quot;) );
@@ -156,7 +156,7 @@ const localTime = minitz.fromTZISO(&quot;2022-09-15 23:00:00&quot;,&quot;Asia/To
 console.log( localTime.toLocaleString(&quot;sv-SE&quot;, { timeZone: &quot;America/New_York&quot; }) );
 // -> 2022-09-15 10:00:00
 </code></pre>
-<p>More examples further down, and full documentation available at <a href="https://hexagon.github.io/minitz/">hexagon.github.io/minitz</a>.</p>
+<p>More examples are available further below, and the full documentation is available at <a href="https://hexagon.github.io/minitz/">hexagon.github.io/minitz</a>.</p>
 <h2>Installation</h2>
 <h3>Node.js</h3>
 <p><code>npm install minitz --save</code></p>
@@ -175,27 +175,28 @@ const minitz = require(&quot;minitz&quot;);
 </code></pre>
 <h3>Deno</h3>
 <p>JavaScript</p>
-<pre class="prettyprint source lang-javascript"><code>import minitz from &quot;https://cdn.jsdelivr.net/gh/hexagon/minitz/src/minitz.js&quot;;
+<pre class="prettyprint source lang-javascript"><code>import minitz from &quot;https://deno.land/x/minitz@2.1.1/src/minitz.js&quot;;
 
 // ...
 </code></pre>
 <p>TypeScript</p>
-<pre class="prettyprint source lang-typescript"><code>import { minitz } from &quot;https://cdn.jsdelivr.net/gh/hexagon/minitz/src/minitz.js&quot;;
+<pre class="prettyprint source lang-typescript"><code>import { minitz } from &quot;https://deno.land/x/minitz@2.1.1/src/minitz.js&quot;;
 
 // ...
 </code></pre>
+<p>Check <a href="https://deno.land/x/minitz">https://deno.land/x/minitz</a> for latest available version</p>
 <h3>Browser</h3>
 <h4>Manual</h4>
 <ul>
-<li>Download latest <a href="https://github.com/Hexagon/minitz/archive/refs/heads/main.zip">zipball</a></li>
-<li>Unpack</li>
+<li>Download the latest <a href="https://github.com/Hexagon/minitz/archive/refs/heads/main.zip">zipball</a></li>
+<li>Extract</li>
 <li>Grab <code>minitz.min.js</code> (UMD and standalone) or <code>minitz.min.mjs</code> (ES-module) from the <a href="/dist">dist/</a> folder</li>
 </ul>
 <h4>CDN</h4>
-<p>To use as a <a href="https://github.com/umdjs/umd">UMD</a>-module (stand alone, <a href="https://requirejs.org/">RequireJS</a> etc.)</p>
+<p>To use as an <a href="https://github.com/umdjs/umd">UMD</a>-module (stand alone, <a href="https://requirejs.org/">RequireJS</a> etc.)</p>
 <pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/minitz/dist/minitz.min.js&quot;>&lt;/script>
 </code></pre>
-<p>To use as a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">ES-module</a></p>
+<p>To use as an <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">ES-module</a></p>
 <pre class="prettyprint source lang-html"><code>&lt;script type=&quot;module&quot;>
 	import minitz from &quot;https://cdn.jsdelivr.net/npm/minitz/dist/minitz.min.mjs&quot;;
 
@@ -203,29 +204,29 @@ const minitz = require(&quot;minitz&quot;);
 &lt;/script>
 </code></pre>
 <h3>More examples</h3>
-<p>Assuming you have imported minitz as described under 'Installation'.</p>
+<p>The below examples will work only if you have imported minitz as described in the 'Installation' section, if that's not the case results may vary.</p>
 <h4>Convert a specific timezone to local time</h4>
 <p>Standard way</p>
 <pre class="prettyprint source lang-javascript"><code>// Convert 2022-09-10 23:08:09 in New York to local time (in this example Europe/Stockholm)
 console.log(&quot;Local time: &quot;, minitz(2022, 9, 10, 23, 8, 9, &quot;America/New_York&quot;).toLocaleString(&quot;sv-SE&quot;));
 // Local time:  2022-09-11 05:08:09
 </code></pre>
-<p>If providing an ISO8601 timestring</p>
+<p>Providing an ISO8601 timestring</p>
 <pre class="prettyprint source lang-javascript"><code>// Convert 2022-09-10 23:08:09 in New York to local time (in this example Europe/Stockholm)
 console.log(&quot;Local time: &quot;, minitz(&quot;2022-09-10 23:08:99&quot;, &quot;America/New_York&quot;).toLocaleString(&quot;sv-SE&quot;));
 // Local time:  2022-09-11 05:08:09
 </code></pre>
 <h4>Convert local time to a specific timezone</h4>
-<p>Provided that you only neeed to display the result, converting local time to specific timezone is best done with vanilla JavaScript.</p>
+<p>Provided that you only neeed to display the result, converting local time to specific timezone is best achieved with vanilla JavaScript.</p>
 <pre class="prettyprint source lang-javascript"><code>console.log(&quot;Time in New York printed with system locale: &quot;, new Date().toLocaleString(&quot;sv-SE&quot;, { timeZone: &quot;America/New_York&quot;}));
 // -> Time in New York printed with system locale:  2022-09-14 17:29:42
 </code></pre>
-<p>If you need to use the result in any way, it's better to use minitz to convert to a remote timezone. That way you get the results as an object, which also includes which timezone the time is converted to.</p>
+<p>If you need to use the result in any other way, it's better to use minitz to convert to a remote timezone. This way you'll get the results as an object, which also includes the timezone to which the time is converted to.</p>
 <pre class="prettyprint source lang-javascript"><code>//  Convert to local time to time in America/New_York
 //  As time in other timezones than local cannot be represented correctly by a date object
 //  a generic object is returned
 console.log(&quot;Time in New York: &quot;, minitz.toTZ(new Date(), &quot;America/New_York&quot;));
-// -> Time in New York: 
+// -> Time in New York:
 //  {
 //     year: 2022,
 //     month: 9,

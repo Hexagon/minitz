@@ -42,36 +42,36 @@ export type TimePoint = {
 export function minitz(year: any, month: any, day: any, hour: any, minute: any, second: any, timezone: any, throwOnInvalidTime: any): date;
 export namespace minitz {
     /**
-     * Converts a date/time from a specific timezone to a normal date object with system local time
+     * Converts a date/time from a specific timezone to a normal date object using the system local time
      *
      * @public
      *
      * @param {string} localTimeString - ISO8601 formatted local time string, non UTC
      * @param {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
-     * @param {boolean} [throwOnInvalidTime] - Default is to return adjusted time if input time is during an DST switch.
-     *										E.g. assume 01:01:01 if input is 00:01:01 but time actually
-     *										skips from 23:59:59 to 01:00:00. Setting this flag to true makes the library throw instead.
+     * @param {boolean} [throwOnInvalidTime] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
+     *										E.g. Value "01:01:01" is returned if input time is 00:01:01 while one hour got actually
+     *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw instead.
      * @returns {date} - Normal date object
      */
     export function fromTZISO(localTimeString: string, timezone: string, throwOnInvalidTime?: boolean): date;
     /**
-     * Converts a date/time from a specific timezone to a normal date object with system local time
+     * Converts a date/time from a specific timezone to a normal date object using the system local time
      *
      * @public
      *
      * @param {TimePoint} date - Object with specified timezone
-     * @param {boolean} [throwOnInvalidTime] - Default is to return adjusted time if input time is during an DST switch.
-     *										E.g. assume 01:01:01 if input is 00:01:01 but time actually
-     *										skips from 23:59:59 to 01:00:00. Setting this flag to true makes the library throw instead.
+     * @param {boolean} [throwOnInvalidTime] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
+     *										E.g. Value "01:01:01" is returned if input time is 00:01:01 while one hour got actually
+     *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw instead.
      * @returns {date} - Normal date object
      */
     export function fromTZ(timePoint: any, throwOnInvalidTime?: boolean): date;
     /**
-     * Converts a date to a specific time zone and return a object containing year, month,
-     * day, hour, (...) and timezone used for conversion
+     * Converts a date to a specific time zone and returns an object containing year, month,
+     * day, hour, (...) and timezone used for the conversion
      *
      * **Please note**: If you just want to _display_ date/time in another
-     * time zone, use vanilla JS. See example below.
+     * time zone, use vanilla JS. See the example below.
      *
      * @public
      *
