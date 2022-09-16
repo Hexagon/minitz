@@ -79,7 +79,7 @@ import minitz from "minitz";
 JavaScript
 
 ```javascript
-import minitz from "https://cdn.jsdelivr.net/gh/hexagon/minitz/src/minitz.js";
+import minitz from "https://deno.land/x/minitz@2.1.1/src/minitz.js";
 
 // ...
 ```
@@ -87,12 +87,14 @@ import minitz from "https://cdn.jsdelivr.net/gh/hexagon/minitz/src/minitz.js";
 TypeScript
 
 ```typescript
-import { minitz } from "https://cdn.jsdelivr.net/gh/hexagon/minitz/src/minitz.js";
+import { minitz } from "https://deno.land/x/minitz@2.1.1/src/minitz.js";
 
 // ...
 ```
 
-### Browser
+Check [https://deno.land/x/minitz](https://deno.land/x/minitz) for latest available version
+
+### Browser 
 
 #### Manual
 

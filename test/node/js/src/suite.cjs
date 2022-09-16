@@ -96,12 +96,20 @@ module.exports = function (minitz) {
 		assert.throws(() => minitz.fromTZISO("2023-03-25 1908:09", "America/New_York"));
 	});
 	
+	test("Timezone conversion throws on invalid time", function () {
+		assert.throws(() => minitz.fromTZISO("2023-12-25 25:08:09", "America/New_York"));
+	});
+
 	test("Timezone conversion throws on non numeric time", function () {
 		assert.throws(() => minitz.fromTZISO("2023-a-25 19:08:09", "America/New_York"));
 	});
 
-	test("Timezone conversion throws on UTC time", function () {
-		assert.throws(() => minitz.fromTZISO("2023-03-25 19:08:09Z", "America/New_York"));
+	test("Timezone conversion works for UTC time, resets timezone parameter", function () {
+		let result = minitz.fromTZISO("2023-03-25 19:08:09Z", "America/New_York");
+		assert.equal(result.getUTCDate(),25);
+		assert.equal(result.getUTCHours(),19);
+		assert.equal(result.getUTCMinutes(),8);
+		assert.equal(result.getUTCSeconds(),9);
 	});
 
 	test.run();
