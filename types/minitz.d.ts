@@ -39,30 +39,86 @@ export type TimePoint = {
  * @property {Number} second - 0-60
  * @property {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
  */
-export function minitz(year: any, month: any, day: any, hour: any, minute: any, second: any, timezone: any, throwOnInvalidTime: any): date;
+/**
+ * Converts a date/time from a specific timezone to a normal date object using the system local time
+ *
+ * Shortcut for minitz.fromTZ(minitz.tp(...));
+ *
+ * @constructor
+ *
+ * @param {Number} year - 1970--
+ * @param {Number} month - 1-12
+ * @param {Number} day - 1-31
+ * @param {Number} hour - 0-24
+ * @param {Number} minute - 0-60
+ * @param {Number} second - 0-60
+ * @param {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
+ * @param {boolean} [throwOnInvalidTime] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
+ *										E.g. Value "01:01:01" is returned if input time is 00:01:01 while one hour got actually
+ *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw an exception instead.
+ * @returns {date} - Normal date object with correct UTC and system local time
+ *
+ */
+export function minitz(year: number, month: number, day: number, hour: number, minute: number, second: number, timezone: string, throwOnInvalidTime?: boolean): date;
+export class minitz {
+    /**
+     * @typedef {Object} TimePoint
+     * @property {Number} year - 1970--
+     * @property {Number} month - 1-12
+     * @property {Number} day - 1-31
+     * @property {Number} hour - 0-24
+     * @property {Number} minute - 0-60
+     * @property {Number} second - 0-60
+     * @property {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
+     */
+    /**
+     * Converts a date/time from a specific timezone to a normal date object using the system local time
+     *
+     * Shortcut for minitz.fromTZ(minitz.tp(...));
+     *
+     * @constructor
+     *
+     * @param {Number} year - 1970--
+     * @param {Number} month - 1-12
+     * @param {Number} day - 1-31
+     * @param {Number} hour - 0-24
+     * @param {Number} minute - 0-60
+     * @param {Number} second - 0-60
+     * @param {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
+     * @param {boolean} [throwOnInvalidTime] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
+     *										E.g. Value "01:01:01" is returned if input time is 00:01:01 while one hour got actually
+     *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw an exception instead.
+     * @returns {date} - Normal date object with correct UTC and system local time
+     *
+     */
+    constructor(year: number, month: number, day: number, hour: number, minute: number, second: number, timezone: string, throwOnInvalidTime?: boolean);
+}
 export namespace minitz {
     /**
      * Converts a date/time from a specific timezone to a normal date object using the system local time
      *
      * @public
+     * @static
      *
      * @param {string} localTimeString - ISO8601 formatted local time string, non UTC
      * @param {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
      * @param {boolean} [throwOnInvalidTime] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
      *										E.g. Value "01:01:01" is returned if input time is 00:01:01 while one hour got actually
-     *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw instead.
-     * @returns {date} - Normal date object
+     *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw an exception instead.
+     * @return {date} - Normal date object
+     *
      */
     export function fromTZISO(localTimeString: string, timezone: string, throwOnInvalidTime?: boolean): date;
     /**
      * Converts a date/time from a specific timezone to a normal date object using the system local time
      *
      * @public
+     * @static
      *
      * @param {TimePoint} date - Object with specified timezone
      * @param {boolean} [throwOnInvalidTime] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
      *										E.g. Value "01:01:01" is returned if input time is 00:01:01 while one hour got actually
-     *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw instead.
+     *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw an exception instead.
      * @returns {date} - Normal date object
      */
     export function fromTZ(timePoint: any, throwOnInvalidTime?: boolean): date;
@@ -74,6 +130,7 @@ export namespace minitz {
      * time zone, use vanilla JS. See the example below.
      *
      * @public
+     * @static
      *
      * @param {date} date - Input date
      * @param {string} [tzString] - Timezone string in Europe/Stockholm format
@@ -104,14 +161,23 @@ export namespace minitz {
      *
      */
     export function toTZ(date: any, tzString?: string): TimePoint;
-    export function tp(y: any, m: any, d: any, h: any, i: any, s: any, t: any): {
-        year: any;
-        month: any;
-        day: any;
-        hour: any;
-        minute: any;
-        second: any;
-        timezone: any;
-    };
+    /**
+     * Convenience function which returns a TimePoint object for later use in fromTZ
+     *
+     * @public
+     * @static
+     *
+     * @param {Number} year - 1970--
+     * @param {Number} month - 1-12
+     * @param {Number} day - 1-31
+     * @param {Number} hour - 0-24
+     * @param {Number} minute - 0-60
+     * @param {Number} second - 0-60
+     * @param {string} timezone - Time zone in format 'Europe/Stockholm'
+     *
+     * @returns {TimePoint}
+     *
+    */
+    export function tp(y: any, m: any, d: any, h: any, i: any, s: any, t: any): TimePoint;
     export { minitz };
 }
