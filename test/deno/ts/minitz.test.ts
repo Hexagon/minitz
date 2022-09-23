@@ -14,7 +14,10 @@ Deno.test("Convert to different timezone and back", function () {
 
 Deno.test("Timezone conversion using fromTZISO including negative offset and milliseconds", function () {
   const timeInHelsinki = minitz.fromTZISO("2022-09-23T13:52:34.123-03:00", "America/Belem");
-  assertEquals( timeInHelsinki.toLocaleString("sv-SE", { timeZone: "Europe/Stockholm"}), "2022-09-23 18:52:34");
+  assertEquals(
+    timeInHelsinki.toLocaleString("sv-SE", { timeZone: "Europe/Stockholm" }),
+    "2022-09-23 18:52:34",
+  );
 });
 
 Deno.test("Test DST transition", function () {
