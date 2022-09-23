@@ -1,6 +1,6 @@
 {
   "name": "minitz",
-  "version": "2.1.3",
+  "version": "3.0.0",
   "description": "Minimal utility to convert between timezones in JavaScript/TypeScript. Deno/Node/Browser. ESM/CommonJS.",
   "author": "Hexagon <github.com/hexagon>",
   "homepage": "https://hexagon.github.io/minitz",
@@ -12,12 +12,10 @@
     "url": "https://github.com/hexagon/minitz/issues"
   },
   "files": [
-    "dist/*.cjs",
-    "dist/*.js",
-    "dist/*.mjs",
-    "src/*",
-    "types/*",
-    "SECURITY.md"
+    "dist/minitz.min.js",
+    "dist/minitz.min.cjs",
+    "dist/minitz.min.mjs",
+    "types/*"
   ],
   "keywords": [
     "minitz",
@@ -41,20 +39,20 @@
     "build:ci": "npm run test:lint && npm run build:typings && npm run build:dist && npm run build:minify && npm run build:cleanup && npm run test:coverage && npm run test:dist",
     "build:precleanup": "(rm -rf types/* || del /Q types\\*) || (rm -rf dist/* || del /Q dist\\*)",
     "build:dist": "rollup -c ./rollup.config.js",
-    "build:minify": "uglifyjs dist/minitz.cjs --source-map -o dist/minitz.min.js && uglifyjs dist/minitz.mjs --source-map -o dist/minitz.min.mjs",
+    "build:minify": "uglifyjs dist/minitz.cjs -o dist/minitz.min.js && uglifyjs dist/minitz.cjs -o dist/minitz.min.cjs && uglifyjs dist/minitz.mjs -o dist/minitz.min.mjs",
     "build:typings": "tsc",
-    "build:cleanup": "(rm dist/minitz.mjs || del dist\\minitz.mjs)",
+    "build:cleanup": "(rm dist/minitz.mjs || del dist\\minitz.mjs) || (rm dist/minitz.cjs || del dist\\minitz.cjs)",
     "build:docs": "(rm -rf docs/* || rd /S /Q docs) && jsdoc -c .jsdoc.json"
   },
   "type": "module",
-  "main": "./dist/minitz.cjs",
+  "main": "./dist/minitz.min.cjs",
   "browser": "./dist/minitz.min.js",
-  "module": "./src/minitz.js",
+  "module": "./dist/minitz.min.mjs",
   "types": "types/minitz.single.d.ts",
   "exports": {
     ".": {
-      "import": "./src/minitz.js",
-      "require": "./dist/minitz.cjs",
+      "import": "./dist/minitz.min.mjs",
+      "require": "./dist/minitz.min.cjs",
       "browser": "./dist/minitz.min.js"
     }
   },

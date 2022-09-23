@@ -112,6 +112,26 @@ module.exports = function (minitz) {
 		assert.equal(result.getUTCSeconds(),9);
 	});
 
+	test("Timezone conversion using fromTZISO including positive offset", function () {
+		const timeInHelsinki = minitz.fromTZISO("2022-09-23T13:52:34+03:00", "Europe/Helsinki");
+		assert.equal( timeInHelsinki.toLocaleString("sv-SE", { timeZone: "Europe/Stockholm"}), "2022-09-23 12:52:34");
+	});
+
+	test("Timezone conversion using fromTZISO including positive offset and milliseconds", function () {
+		const timeInHelsinki = minitz.fromTZISO("2022-09-23T13:52:34.123+03:00", "Europe/Helsinki");
+		assert.equal( timeInHelsinki.toLocaleString("sv-SE", { timeZone: "Europe/Stockholm"}), "2022-09-23 12:52:34");
+	});
+
+	test("Timezone conversion using fromTZISO including negative offset and milliseconds", function () {
+		const timeInHelsinki = minitz.fromTZISO("2022-09-23T13:52:34.123-03:00", "America/Belem");
+		assert.equal( timeInHelsinki.toLocaleString("sv-SE", { timeZone: "Europe/Stockholm"}), "2022-09-23 18:52:34");
+	});
+
+	test("Timezone conversion using fromTZISO including negative offset and milliseconds without specified timezone", function () {
+		const timeInHelsinki = minitz.fromTZISO("2022-09-23T13:52:34.123-03:00");
+		assert.equal( timeInHelsinki.toLocaleString("sv-SE", { timeZone: "Europe/Stockholm"}), "2022-09-23 18:52:34");
+	});
+
 	test.run();
 
 };
