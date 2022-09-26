@@ -15,6 +15,8 @@
 *   Works in browsers as standalone, UMD or ES-module.
 *   Includes [TypeScript](https://www.typescriptlang.org/) typings.
 
+Try it live on [jsfiddle](https://jsfiddle.net/hexag0n/hoa8kwsb/)
+
 ## Usage
 
 Converting a Date object to another timezone in JavaScript is possible using the Intl feature of vanilla JS.
