@@ -15,7 +15,7 @@
 *   Works in browsers as standalone, UMD or ES-module.
 *   Includes [TypeScript](https://www.typescriptlang.org/) typings.
 
-Try it live on [jsfiddle](https://jsfiddle.net/hexag0n/hoa8kwsb/)
+Try it live on [jsfiddle](https://jsfiddle.net/hexag0n/3mheu5by/)
 
 ## Usage
 
