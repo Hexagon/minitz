@@ -130,7 +130,7 @@
 <li>Convert dates between any timezone supported by the system.</li>
 <li>Parses ISO8601 time strings.</li>
 <li>MIT licensed, use the library any way you want. For real.</li>
-<li>Minimal, no dependencies. Relies on JavaScript Intl and current best practices.</li>
+<li>Minimal (less than 2 KB minified), no dependencies. Relies on JavaScript Intl and current best practices.</li>
 <li>Works in Node.js &gt;=14.0 (both require and import).</li>
 <li>Works in Deno &gt;=1.8.</li>
 <li>Works in browsers as standalone, UMD or ES-module.</li>
@@ -176,12 +176,12 @@ const minitz = require(&quot;minitz&quot;);
 </code></pre>
 <h3>Deno</h3>
 <p>JavaScript</p>
-<pre class="prettyprint source lang-javascript"><code>import minitz from &quot;https://deno.land/x/minitz@3.0.1/src/minitz.js&quot;;
+<pre class="prettyprint source lang-javascript"><code>import minitz from &quot;https://deno.land/x/minitz@4.0.0/src/minitz.js&quot;;
 
 // ...
 </code></pre>
 <p>TypeScript</p>
-<pre class="prettyprint source lang-typescript"><code>import { minitz } from &quot;https://deno.land/x/minitz@3.0.1/src/minitz.js&quot;;
+<pre class="prettyprint source lang-typescript"><code>import { minitz } from &quot;https://deno.land/x/minitz@4.0.0/src/minitz.js&quot;;
 
 // ...
 </code></pre>
@@ -229,13 +229,13 @@ console.log(&quot;Local time: &quot;, minitz(&quot;2022-09-10 23:08:99&quot;, &q
 console.log(&quot;Time in New York: &quot;, minitz.toTZ(new Date(), &quot;America/New_York&quot;));
 // -> Time in New York:
 //  {
-//     year: 2022,
-//     month: 9,
-//     day: 14,
-//     hour: 17,
-//     minute: 29,
-//     second: 42,
-//     timezone: 'America/New_York'
+//     y: 2022,
+//     m: 9,
+//     d: 14,
+//     h: 17,
+//     i: 29,
+//     s: 42,
+//     tz: 'America/New_York'
 //  }
 </code></pre>
 <h2>Contributing</h2>

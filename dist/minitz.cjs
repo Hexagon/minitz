@@ -34,13 +34,13 @@
 
 	/**
 	 * @typedef {Object} TimePoint
-	 * @property {Number} year - 1970--
-	 * @property {Number} month - 1-12
-	 * @property {Number} day - 1-31
-	 * @property {Number} hour - 0-24
-	 * @property {Number} minute - 0-60
-	 * @property {Number} second - 0-60
-	 * @property {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
+	 * @property {Number} y - 1970--
+	 * @property {Number} m - 1-12
+	 * @property {Number} d - 1-31
+	 * @property {Number} h - 0-24
+	 * @property {Number} i - 0-60 Minute
+	 * @property {Number} s - 0-60
+	 * @property {string} tz - Time zone in IANA database format 'Europe/Stockholm'
 	 */
 
 	/**
@@ -50,21 +50,21 @@
 	 *
 	 * @constructor
 	 *
-	 * @param {Number} year - 1970--
-	 * @param {Number} month - 1-12
-	 * @param {Number} day - 1-31
-	 * @param {Number} hour - 0-24
-	 * @param {Number} minute - 0-60
-	 * @param {Number} second - 0-60
-	 * @param {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
-	 * @param {boolean} [throwOnInvalidTime] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
+	 * @param {Number} y - 1970--
+	 * @param {Number} m - 1-12
+	 * @param {Number} d - 1-31
+	 * @param {Number} h - 0-24
+	 * @param {Number} i - 0-60 Minute
+	 * @param {Number} s - 0-60
+	 * @param {string} tz - Time zone in IANA database format 'Europe/Stockholm'
+	 * @param {boolean} [throwOnInvalid] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
 	 *										E.g. Value "01:01:01" is returned if input time is 00:01:01 while one hour got actually
 	 *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw an exception instead.
 	 * @returns {date} - Normal date object with correct UTC and system local time
 	 *
 	 */
-	function minitz(year, month, day, hour, minute, second, timezone, throwOnInvalidTime) {
-		return minitz.fromTZ(minitz.tp(year, month, day, hour, minute, second, timezone), throwOnInvalidTime);
+	function minitz(y, m, d, h, i, s, tz, throwOnInvalid) {
+		return minitz.fromTZ(minitz.tp(y, m, d, h, i, s, tz), throwOnInvalid);
 	}
 
 	/**
@@ -73,16 +73,16 @@
 	 * @public
 	 * @static
 	 * 
-	 * @param {string} localTimeString - ISO8601 formatted local time string, non UTC
-	 * @param {string} timezone - Time zone in IANA database format 'Europe/Stockholm'
-	 * @param {boolean} [throwOnInvalidTime] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
+	 * @param {string} localTimeStr - ISO8601 formatted local time string, non UTC
+	 * @param {string} tz - Time zone in IANA database format 'Europe/Stockholm'
+	 * @param {boolean} [throwOnInvalid] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
 	 *										E.g. Value "01:01:01" is returned if input time is 00:01:01 while one hour got actually
 	 *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw an exception instead.
 	 * @return {date} - Normal date object
 	 * 
 	 */
-	minitz.fromTZISO = (localTimeString, timezone, throwOnInvalidTime) => {
-		return minitz.fromTZ(parseISOLocal(localTimeString, timezone), throwOnInvalidTime);
+	minitz.fromTZISO = (localTimeStr, tz, throwOnInvalid) => {
+		return minitz.fromTZ(parseISOLocal(localTimeStr, tz), throwOnInvalid);
 	};
 
 	/**
@@ -91,53 +91,53 @@
 	 * @public
 	 * @static
 	 *
-	 * @param {TimePoint} date - Object with specified timezone
-	 * @param {boolean} [throwOnInvalidTime] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
+	 * @param {TimePoint} tp - Object with specified timezone
+	 * @param {boolean} [throwOnInvalid] - Default is to return the adjusted time if the call happens during a Daylight-Saving-Time switch.
 	 *										E.g. Value "01:01:01" is returned if input time is 00:01:01 while one hour got actually
 	 *										skipped, going from 23:59:59 to 01:00:00. Setting this flag makes the library throw an exception instead.
 	 * @returns {date} - Normal date object
 	 */
-	minitz.fromTZ = function(timePoint, throwOnInvalidTime) {
+	minitz.fromTZ = function(tp, throwOnInvalid) {
 
 		const
 
 			// Construct a fake Date object with UTC date/time set to local date/time in source timezone
-			inputDate = new Date(Date.UTC(
-				timePoint.year,
-				timePoint.month - 1,
-				timePoint.day,
-				timePoint.hour,
-				timePoint.minute,
-				timePoint.second
+			inDate = new Date(Date.UTC(
+				tp.y,
+				tp.m - 1,
+				tp.d,
+				tp.h,
+				tp.i,
+				tp.s
 			)),
 
 			// Get offset between UTC and source timezone
-			offset = getTimezoneOffset(timePoint.timezone, inputDate),
+			offset = getTimezoneOffset(tp.tz, inDate),
 
-			// Remove offset from inputDate to hopefully get a true date object
-			guessedLocalDate = new Date(inputDate.getTime() - offset),
+			// Remove offset from inDate to hopefully get a true date object
+			dateGuess = new Date(inDate.getTime() - offset),
 
 			// Get offset between UTC and guessed time in target timezone
-			guessedInputDateOffset = getTimezoneOffset(timePoint.timezone, guessedLocalDate);
+			dateOffsGuess = getTimezoneOffset(tp.tz, dateGuess);
 
 		// If offset between guessed true date object and UTC matches initial calculation, the guess
 		// was spot on
-		if ((guessedInputDateOffset - offset) === 0) {
-			return guessedLocalDate;
+		if ((dateOffsGuess - offset) === 0) {
+			return dateGuess;
 		} else {
 			// Not quite there yet, make a second try on guessing the local time, adjust by the offset indicated by the previous guess
 			// Try recreating input time again
 			// Then calculate and check the offset again
 			const
-				guessedLocalDate2 = new Date(inputDate.getTime() - guessedInputDateOffset),
-				guessedInputDateOffset2 = getTimezoneOffset(timePoint.timezone, guessedLocalDate2);
-			if ((guessedInputDateOffset2 - guessedInputDateOffset) === 0) {
+				dateGuess2 = new Date(inDate.getTime() - dateOffsGuess),
+				dateOffsGuess2 = getTimezoneOffset(tp.tz, dateGuess2);
+			if ((dateOffsGuess2 - dateOffsGuess) === 0) {
 				// All good, return local time
-				return guessedLocalDate2;
-			} else if (!throwOnInvalidTime) {
+				return dateGuess2;
+			} else if (!throwOnInvalid) {
 				// This guess wasn't spot on either, we're most probably dealing with a DST transition
 				// - return the local time adjusted by _initial_ offset
-				return guessedLocalDate;
+				return dateGuess;
 			} else {
 				// Input time is invalid, and the library is instructed to throw, so let's do it
 				throw new Error("Invalid date passed to fromTZ()");
@@ -155,8 +155,8 @@
 	 * @public
 	 * @static
 	 *
-	 * @param {date} date - Input date
-	 * @param {string} [tzString] - Timezone string in Europe/Stockholm format
+	 * @param {d} date - Input date
+	 * @param {string} [tzStr] - Timezone string in Europe/Stockholm format
 	 *
 	 * @returns {TimePoint}
 	 *
@@ -167,13 +167,13 @@
 	 *
 	 * // Will result in the following object:
 	 * // {
-	 * //  year: 2022,
-	 * //  month: 9,
-	 * //  day: 28,
-	 * //  hour: 13,
-	 * //  minute: 28,
-	 * //  second: 28,
-	 * //  timezone: "America/New_York"
+	 * //  y: 2022,
+	 * //  m: 9,
+	 * //  d: 28,
+	 * //  h: 13,
+	 * //  i: 28,
+	 * //  s: 28,
+	 * //  tz: "America/New_York"
 	 * // }
 	 *
 	 * @example <caption>Example using vanilla js:</caption>
@@ -183,16 +183,16 @@
 	 * );
 	 *
 	 */
-	minitz.toTZ = function (date, tzString) {
-		const target = new Date(date.toLocaleString("sv-SE", {timeZone: tzString}));
+	minitz.toTZ = function (d, tzStr) {
+		const td = new Date(d.toLocaleString("sv-SE", {timeZone: tzStr}));
 		return {
-			year: target.getFullYear(),
-			month: target.getMonth() + 1,
-			day: target.getDate(),
-			hour: target.getHours(),
-			minute: target.getMinutes(),
-			second: target.getSeconds(),
-			timezone: tzString
+			y: td.getFullYear(),
+			m: td.getMonth() + 1,
+			d: td.getDate(),
+			h: td.getHours(),
+			i: td.getMinutes(),
+			s: td.getSeconds(),
+			tz: tzStr
 		};
 	};
 
@@ -202,18 +202,18 @@
 	 * @public
 	 * @static
 	 *
-	 * @param {Number} year - 1970--
-	 * @param {Number} month - 1-12
-	 * @param {Number} day - 1-31
-	 * @param {Number} hour - 0-24
-	 * @param {Number} minute - 0-60
-	 * @param {Number} second - 0-60
-	 * @param {string} timezone - Time zone in format 'Europe/Stockholm'
+	 * @param {Number} y - 1970--
+	 * @param {Number} m - 1-12
+	 * @param {Number} d - 1-31
+	 * @param {Number} h - 0-24
+	 * @param {Number} i - 0-60 Minute
+	 * @param {Number} s - 0-60
+	 * @param {string} tz - Time zone in format 'Europe/Stockholm'
 	 *
 	 * @returns {TimePoint}
 	 *
 	*/
-	minitz.tp = (y,m,d,h,i,s,t) => { return { year: y, month: m, day: d, hour: h, minute: i, second: s, timezone: t }; };
+	minitz.tp = (y,m,d,h,i,s,tz) => { return { y, m, d, h, i, s, tz: tz }; };
 
 	/**
 	 * Helper function that returns the current UTC offset (in ms) for a specific timezone at a specific point in time
@@ -238,17 +238,17 @@
 	 * 
 	 * @private
 	 *
-	 * @param {string} dateTimeString - an ISO 8601 format date and time string
+	 * @param {string} dtStr - an ISO 8601 format date and time string
 	 *					  with all components, e.g. 2015-11-24T19:40:00
 	 * @returns {TimePoint} - TimePoint instance from parsing the string
 	 */
-	function parseISOLocal(dateTimeString, timezone) {
+	function parseISOLocal(dtStr, tz) {
 
 		// Parse date using built in Date.parse
-		const parsed = new Date(Date.parse(dateTimeString));
+		const pd = new Date(Date.parse(dtStr));
 
 		// Check for completeness
-		if (isNaN(parsed)) {
+		if (isNaN(pd)) {
 			throw new Error("minitz: Invalid ISO8601 passed to parser.");
 		}
 		
@@ -256,11 +256,11 @@
 		//   * date/time is specified in UTC (Z-flag included)
 		//   * or UTC offset is specified (+ or - included after character 9 (20200101 or 2020-01-0))
 		// Return time in utc, else return local time and include timezone identifier
-		const stringEnd = dateTimeString.substring(9);
-		if (dateTimeString.includes("Z") || stringEnd.includes("-") || stringEnd.includes("+")) {
-			return minitz.tp(parsed.getUTCFullYear(), parsed.getUTCMonth()+1, parsed.getUTCDate(),parsed.getUTCHours(), parsed.getUTCMinutes(),parsed.getUTCSeconds(), "Etc/UTC");
+		const stringEnd = dtStr.substring(9);
+		if (dtStr.includes("Z") || stringEnd.includes("-") || stringEnd.includes("+")) {
+			return minitz.tp(pd.getUTCFullYear(), pd.getUTCMonth()+1, pd.getUTCDate(),pd.getUTCHours(), pd.getUTCMinutes(),pd.getUTCSeconds(), "Etc/UTC");
 		} else {
-			return minitz.tp(parsed.getFullYear(), parsed.getMonth()+1, parsed.getDate(),parsed.getHours(), parsed.getMinutes(),parsed.getSeconds(), timezone);
+			return minitz.tp(pd.getFullYear(), pd.getMonth()+1, pd.getDate(),pd.getHours(), pd.getMinutes(),pd.getSeconds(), tz);
 		}
 		// Treat date as local time, in target timezone
 

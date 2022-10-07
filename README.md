@@ -9,7 +9,7 @@
 *   Convert dates between any timezone supported by the system.
 *   Parses ISO8601 time strings.
 *   MIT licensed, use the library any way you want. For real.
-*   Minimal, no dependencies. Relies on JavaScript Intl and current best practices.
+*   Minimal (less than 2 KB minified), no dependencies. Relies on JavaScript Intl and current best practices.
 *   Works in Node.js >=14.0 (both require and import).
 *   Works in Deno >=1.8.
 *   Works in browsers as standalone, UMD or ES-module.
@@ -81,7 +81,7 @@ import minitz from "minitz";
 JavaScript
 
 ```javascript
-import minitz from "https://deno.land/x/minitz@3.0.1/src/minitz.js";
+import minitz from "https://deno.land/x/minitz@4.0.0/src/minitz.js";
 
 // ...
 ```
@@ -89,7 +89,7 @@ import minitz from "https://deno.land/x/minitz@3.0.1/src/minitz.js";
 TypeScript
 
 ```typescript
-import { minitz } from "https://deno.land/x/minitz@3.0.1/src/minitz.js";
+import { minitz } from "https://deno.land/x/minitz@4.0.0/src/minitz.js";
 
 // ...
 ```
@@ -162,13 +162,13 @@ If you need to use the result in any other way, it's better to use minitz to con
 console.log("Time in New York: ", minitz.toTZ(new Date(), "America/New_York"));
 // -> Time in New York:
 //  {
-//     year: 2022,
-//     month: 9,
-//     day: 14,
-//     hour: 17,
-//     minute: 29,
-//     second: 42,
-//     timezone: 'America/New_York'
+//     y: 2022,
+//     m: 9,
+//     d: 14,
+//     h: 17,
+//     i: 29,
+//     s: 42,
+//     tz: 'America/New_York'
 //  }
 ```
 
