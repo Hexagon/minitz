@@ -58,6 +58,23 @@ module.exports = function (minitz) {
 			minitz.fromTZ(minitz.tp(2022,3,13,2,8,9,"America/New_York")).getTime()
 		);
 	});
+
+	test("Test correction behavior during DST transition (new york)", function () {
+		// 02:08 is during new york DST transition (02:00 -> 03:00), here it is corrected to 03:08 and matches correct point the same time zone
+		assert.equal(
+			minitz.fromTZ(minitz.tp(2022,3,13,2,8,9,"America/New_York")).getTime(),
+			minitz.fromTZ(minitz.tp(2022,3,13,3,8,9,"America/New_York")).getTime()
+		);
+	});
+
+
+	test("Test correction behavior during DST transition (stockholm)", function () {
+		// 02:30 is during stockholm DST transition (02:00 -> 03:00), here it is corrected to 03:30 and matches correct point in time
+		assert.equal(
+			minitz.fromTZ(minitz.tp(2023,3,26,2,30,0,"Europe/Stockholm")).toLocaleString(),
+			minitz.fromTZ(minitz.tp(2023,3,26,3,30,0,"Europe/Stockholm")).toLocaleString()
+		);
+	});
 	
 	test("Test DST transition without correction", function () {
 		// 02:08 is during new york DST transition (02:00 -> 03:00), here it is not corrected and should throw
