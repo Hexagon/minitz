@@ -12,6 +12,7 @@
 *   Minimal (less than 2 KB minified), no dependencies. Relies on JavaScript Intl and current best practices.
 *   Works in Node.js >=14.0 (both require and import).
 *   Works in Deno >=1.8.
+*   Works in Bun >=0.2.2
 *   Works in browsers as standalone, UMD or ES-module.
 *   Includes [TypeScript](https://www.typescriptlang.org/) typings.
 
@@ -81,7 +82,7 @@ import minitz from "minitz";
 JavaScript
 
 ```javascript
-import minitz from "https://deno.land/x/minitz@4.0.0/src/minitz.js";
+import minitz from "https://deno.land/x/minitz@4.0.3/src/minitz.js";
 
 // ...
 ```
@@ -89,12 +90,24 @@ import minitz from "https://deno.land/x/minitz@4.0.0/src/minitz.js";
 TypeScript
 
 ```typescript
-import { minitz } from "https://deno.land/x/minitz@4.0.0/src/minitz.js";
+import { minitz } from "https://deno.land/x/minitz@4.0.3/src/minitz.js";
 
 // ...
 ```
 
 Check [https://deno.land/x/minitz](https://deno.land/x/minitz) for latest available version
+
+### Bun
+
+```bun add minitz```
+
+> **Note** If you experience problems during install, try using `bun add minitz --backend=copyfile`.
+
+JavaScript
+
+```javascript
+import minitz from "minitz";
+```
 
 ### Browser 
 

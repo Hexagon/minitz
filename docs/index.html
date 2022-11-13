@@ -133,6 +133,7 @@
 <li>Minimal (less than 2 KB minified), no dependencies. Relies on JavaScript Intl and current best practices.</li>
 <li>Works in Node.js &gt;=14.0 (both require and import).</li>
 <li>Works in Deno &gt;=1.8.</li>
+<li>Works in Bun &gt;=0.2.2</li>
 <li>Works in browsers as standalone, UMD or ES-module.</li>
 <li>Includes <a href="https://www.typescriptlang.org/">TypeScript</a> typings.</li>
 </ul>
@@ -176,16 +177,24 @@ const minitz = require(&quot;minitz&quot;);
 </code></pre>
 <h3>Deno</h3>
 <p>JavaScript</p>
-<pre class="prettyprint source lang-javascript"><code>import minitz from &quot;https://deno.land/x/minitz@4.0.0/src/minitz.js&quot;;
+<pre class="prettyprint source lang-javascript"><code>import minitz from &quot;https://deno.land/x/minitz@4.0.3/src/minitz.js&quot;;
 
 // ...
 </code></pre>
 <p>TypeScript</p>
-<pre class="prettyprint source lang-typescript"><code>import { minitz } from &quot;https://deno.land/x/minitz@4.0.0/src/minitz.js&quot;;
+<pre class="prettyprint source lang-typescript"><code>import { minitz } from &quot;https://deno.land/x/minitz@4.0.3/src/minitz.js&quot;;
 
 // ...
 </code></pre>
 <p>Check <a href="https://deno.land/x/minitz">https://deno.land/x/minitz</a> for latest available version</p>
+<h3>Bun</h3>
+<p><code>bun add minitz</code></p>
+<blockquote>
+<p><strong>Note</strong> If you experience problems during install, try using <code>bun add minitz --backend=copyfile</code>.</p>
+</blockquote>
+<p>JavaScript</p>
+<pre class="prettyprint source lang-javascript"><code>import minitz from &quot;minitz&quot;;
+</code></pre>
 <h3>Browser</h3>
 <h4>Manual</h4>
 <ul>
