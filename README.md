@@ -82,7 +82,7 @@ import minitz from "minitz";
 JavaScript
 
 ```javascript
-import minitz from "https://deno.land/x/minitz@4.0.3/src/minitz.js";
+import minitz from "https://deno.land/x/minitz@4.0.4/src/minitz.js";
 
 // ...
 ```
@@ -90,7 +90,7 @@ import minitz from "https://deno.land/x/minitz@4.0.3/src/minitz.js";
 TypeScript
 
 ```typescript
-import { minitz } from "https://deno.land/x/minitz@4.0.3/src/minitz.js";
+import { minitz } from "https://deno.land/x/minitz@4.0.4/src/minitz.js";
 
 // ...
 ```

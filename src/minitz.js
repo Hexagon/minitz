@@ -222,9 +222,10 @@ minitz.tp = (y,m,d,h,i,s,tz) => { return { y, m, d, h, i, s, tz: tz }; };
  * @returns {number} - Offset in ms between UTC and timeZone
  */
 function getTimezoneOffset(timeZone, date = new Date()) {
-	const tz = date.toLocaleString("en", {timeZone, timeStyle: "long"}).split(" ").slice(-1)[0];
-	const dateString = date.toLocaleString();
-	return Date.parse(`${dateString} UTC`) - Date.parse(`${dateString} ${tz}`);
+	const dateFormatter = Intl.DateTimeFormat("en-US",{timeZone, timeZoneName: "longOffset"});
+	const tz = dateFormatter.formatToParts(date).find(e => e.type=="timeZoneName").value.replace("GMT","");
+	const dateString = date.toISOString().replace("Z","");
+	return Date.parse(`${dateString}Z`) - Date.parse(`${dateString}${tz}`);
 }
 
 
