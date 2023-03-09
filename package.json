@@ -1,6 +1,6 @@
 {
   "name": "minitz",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "description": "Minimal utility to convert between timezones in JavaScript/TypeScript. Deno/Node/Browser. ESM/CommonJS.",
   "author": "Hexagon <github.com/hexagon>",
   "homepage": "https://hexagon.github.io/minitz",
@@ -60,9 +60,9 @@
   "devDependencies": {
     "c8": "^7.12.0",
     "eslint": "^8.23.0",
-    "jsdoc": "^3.6.11",
+    "jsdoc": "^4.0.2",
     "jsdoc-chameleon-template": "^1.0.2",
-    "rollup": "^2.79.0",
+    "rollup": "^3.13.0",
     "typescript": "^4.8.2",
     "uglify-js": "^3.17.0",
     "uvu": "^0.5.6"

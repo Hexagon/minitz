@@ -186,7 +186,7 @@
 	 *
 	 */
 	minitz.toTZ = function (d, tzStr) {
-		const td = new Date(d.toLocaleString("sv-SE", {timeZone: tzStr}));
+		const td = new Date(d.toLocaleString("en-US", {timeZone: tzStr}));
 		return {
 			y: td.getFullYear(),
 			m: td.getMonth() + 1,
@@ -230,7 +230,7 @@
 	function getTimezoneOffset(timeZone, date = new Date()) {
 
 		// Get timezone 
-		const tz = date.toLocaleString("en", {timeZone, timeStyle: "long"}).split(" ").slice(-1)[0];
+		const tz = date.toLocaleString("en-US", {timeZone: timeZone, timeZoneName: "short"}).split(" ").slice(-1)[0];
 
 		// Extract time in en-US format
 		// - replace narrow no break space with regular space to compensate for bug in Node.js 19.1
