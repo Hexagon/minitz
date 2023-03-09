@@ -10,7 +10,7 @@ module.exports = function (minitz) {
 		const 
 			sourceUTCDate = new Date(Date.UTC(2022,0,1,0,0,0)),
 			dateInNewYork = minitz.toTZ(sourceUTCDate, "America/New_York");
-
+		
 		const
 			backToUTC = minitz.fromTZ(dateInNewYork);
 

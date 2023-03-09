@@ -186,7 +186,11 @@
 	 *
 	 */
 	minitz.toTZ = function (d, tzStr) {
-		const td = new Date(d.toLocaleString("en-US", {timeZone: tzStr}));
+
+		// - replace narrow no break space with regular space to compensate for bug in Node.js 19.1
+		const localDateString = d.toLocaleString("en-US", {timeZone: tzStr}).replace(/[\u202f]/," ");
+
+		const td = new Date(localDateString);
 		return {
 			y: td.getFullYear(),
 			m: td.getMonth() + 1,
