@@ -3,7 +3,7 @@
   "version": "4.0.5",
   "description": "Minimal utility to convert between timezones in JavaScript/TypeScript. Deno/Node/Browser. ESM/CommonJS.",
   "author": "Hexagon <github.com/hexagon>",
-  "homepage": "https://hexagon.github.io/minitz",
+  "homepage": "https://minitz.github.io",
   "repository": {
     "type": "git",
     "url": "https://github.com/hexagon/minitz"
@@ -42,8 +42,7 @@
     "build:dist": "rollup -c ./rollup.config.js",
     "build:minify": "uglifyjs dist/minitz.cjs -o dist/minitz.min.js && uglifyjs dist/minitz.cjs -o dist/minitz.min.cjs && uglifyjs dist/minitz.mjs -o dist/minitz.min.mjs",
     "build:typings": "tsc",
-    "build:cleanup": "(rm dist/minitz.mjs || del dist\\minitz.mjs) || (rm dist/minitz.cjs || del dist\\minitz.cjs)",
-    "build:docs": "(rm -rf docs/* || rd /S /Q docs) && jsdoc -c .jsdoc.json"
+    "build:cleanup": "(rm dist/minitz.mjs || del dist\\minitz.mjs) || (rm dist/minitz.cjs || del dist\\minitz.cjs)"
   },
   "type": "module",
   "main": "./dist/minitz.min.cjs",
@@ -58,12 +57,11 @@
     }
   },
   "devDependencies": {
-    "c8": "^7.12.0",
+    "c8": "^8.0.1",
     "eslint": "^8.23.0",
     "jsdoc": "^4.0.2",
-    "jsdoc-chameleon-template": "^1.0.2",
     "rollup": "^3.13.0",
-    "typescript": "^4.8.2",
+    "typescript": "^5.1.6",
     "uglify-js": "^3.17.0",
     "uvu": "^0.5.6"
   },

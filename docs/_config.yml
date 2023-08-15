@@ -1,0 +1,28 @@
+title: Minitz
+
+description: Minimal, yet powerful libraryto manage and manipulate time zones for native JavaScript date objects.
+
+remote_theme: just-the-docs/just-the-docs
+
+url: https://minitz.56k.guru
+
+aux_links:
+  GitHub Repository: https://github.com/hexagon/minitz
+  NPM Mobule: https://npmjs.com/package/minitz
+  Deno Library: https://deno.land/x/minitz
+
+plugins:
+  - jekyll-relative-links
+  - jekyll-default-layout
+  
+enable_copy_code_button: true
+
+# Footer content
+footer_content: "Copyright &copy; 2021-2023 Hexagon. Distributed by an <a href=\"https://github.com/hexagon/minitz/tree/main/LICENSE\">MIT license.</a>"
+last_edit_time_format: "%b %e %Y at %I:%M %p"
+gh_edit_link: true
+gh_edit_link_text: "Edit this page on GitHub."
+gh_edit_repository: "https://github.com/hexagon/minitz"
+gh_edit_branch: "main"
+gh_edit_source: docs
+gh_edit_view_mode: "tree"
