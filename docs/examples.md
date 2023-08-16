@@ -5,7 +5,8 @@ nav_order: 3
 ---
 
 # Minitz Examples
-<br>
+
+---
 
 {% include multiplex.html %}
 

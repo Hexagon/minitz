@@ -5,11 +5,12 @@ nav_order: 2
 ---
 
 # Installing Minitz
-<br>
+
+---
 
 {% include display.html %}
 
-### Node.js
+## Node.js
 
 
 ```npm install minitz --save```
@@ -35,7 +36,7 @@ import minitz from "minitz";
 ```
 
 
-### Deno
+## Deno
 
 
 JavaScript
@@ -57,7 +58,7 @@ import { minitz } from "https://deno.land/x/minitz@4.0.4/src/minitz.js";
 Check [https://deno.land/x/minitz](https://deno.land/x/minitz) for latest available version
 
 
-### Bun
+## Bun
 
 
 ```bun add minitz```
@@ -71,17 +72,17 @@ import minitz from "minitz";
 ```
 
 
-### Browser 
+## Browser 
 
 
-#### Manual
+### Manual
 
 *   Download the latest [zipball](https://github.com/Hexagon/minitz/archive/refs/heads/main.zip)
 *   Extract
 *   Grab ```minitz.min.js``` (UMD and standalone) or ```minitz.min.mjs``` (ES-module) from the [dist/](/dist) folder
 
 
-#### CDN
+### CDN
 
 
 To use as an [UMD](https://github.com/umdjs/umd)-module (stand alone, [RequireJS](https://requirejs.org/) etc.)

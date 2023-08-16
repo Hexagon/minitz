@@ -6,6 +6,8 @@ nav_order: 4
 
 # Minitz contribution guide
 
+---
+
 ## New contributor guide
 
 To get an overview of the project, read the [README](https://github.com/hexagon/minitz). Here are some resources to help you get started with open source contributions:
