@@ -28,6 +28,8 @@ new Date().toLocaleString("sv-SE", { timeZone: "Asia/Tokyo" });
 
 ## Conversion using Minitz
 
+---
+
 Here are a few simple examples on using minitz to convert **from** and **across** different time zones:
 
 ### Conversion from a Specific Timezone to Local Time
@@ -56,6 +58,8 @@ More examples on the [Examples page](./examples.md).
 
 ## Key Features & Compatibility
 
+---
+
 * **Broad Compatibility**: Works seamlessly across Node.js (≥14.0), Deno (≥1.8), Bun (≥0.2.2), and browsers. It also provides support for different module systems, such as standalone, UMD, and ES-modules.
 
 * **Concise and Lightweight**: With a size of less than 2 KB when minified and devoid of external dependencies, Minitz ensures fast load times. It's built on JavaScript's Intl object and follows the best coding practices.
@@ -70,9 +74,12 @@ Try Minitz live on [jsfiddle](https://jsfiddle.net/hexag0n/3mheu5by/)
 
 ## Conversion Functions
 
-### `minitz(y, m, d, h, i, s, tz, [throwOnInvalid])`
+---
 
-**Description**: Converts a date and time from a specified timezone to the system's local time.
+### minitz(y, m, d, h, i, s, tz, [throwOnInvalid])
+
+
+Converts a date and time from a specified timezone to the system's local time.
 
 **Parameters**:
 - `y (Number)`: Year, starting from 1970.
@@ -86,9 +93,12 @@ Try Minitz live on [jsfiddle](https://jsfiddle.net/hexag0n/3mheu5by/)
 
 **Returns**: JavaScript Date object (reflecting UTC and system's local time).
 
-### `minitz.fromTZISO(localTimeStr, tz, [throwOnInvalid])`
+---
 
-**Description**: Converts an ISO8601 formatted string from a given timezone to the system's local date object.
+### minitz.fromTZISO(localTimeStr, tz, [throwOnInvalid])
+
+
+Converts an ISO8601 formatted string from a given timezone to the system's local date object.
 
 **Parameters**:
 - `localTimeStr (String)`: ISO8601 formatted string not in UTC.
@@ -97,9 +107,12 @@ Try Minitz live on [jsfiddle](https://jsfiddle.net/hexag0n/3mheu5by/)
 
 **Returns**: JavaScript Date object.
 
-### `minitz.fromTZ(tp, [throwOnInvalid])`
+---
 
-**Description**: Converts a time from a specified timezone to the system's local date object.
+### minitz.fromTZ(tp, [throwOnInvalid])
+
+
+Converts a time from a specified timezone to the system's local date object.
 
 **Parameters**:
 - `tp (TimePoint object)`: TimePoint object with properties year, month, day, hour, minute, second, and timezone.
@@ -107,9 +120,12 @@ Try Minitz live on [jsfiddle](https://jsfiddle.net/hexag0n/3mheu5by/)
 
 **Returns**: JavaScript Date object.
 
-### `minitz.toTZ(d, tzStr)`
+---
 
-**Description**: Converts a given date object to a specific timezone, returning a `TimePoint` object.
+### minitz.toTZ(d, tzStr)
+
+
+Converts a given date object to a specific timezone, returning a `TimePoint` object.
 
 **Parameters**:
 - `d (Date)`: JavaScript Date object to be converted.
@@ -117,9 +133,12 @@ Try Minitz live on [jsfiddle](https://jsfiddle.net/hexag0n/3mheu5by/)
 
 **Returns**: `TimePoint` object reflecting the time in the specified timezone.
 
-### `minitz.tp(y, m, d, h, i, s, tz)`
+---
 
-**Description**: Generates a `TimePoint` object for later use in `fromTZ`.
+### minitz.tp(y, m, d, h, i, s, tz)
+
+
+Generates a `TimePoint` object for later use in `fromTZ`.
 
 **Parameters**:
 - `y (Number)`: Year, starting from 1970.
@@ -134,7 +153,10 @@ Try Minitz live on [jsfiddle](https://jsfiddle.net/hexag0n/3mheu5by/)
 
 Minitz provides several functions to handle date/time conversions:
 
+---
+
 ### TimePoint Object
+
 
 A standard object format that Minitz uses to represent date/time information.
 
